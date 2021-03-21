@@ -7,7 +7,7 @@
 
 {#if visible}
 	<img
-		src="/svelte-electron-vite.svg"
+		src="/sveltekit-electron.svg"
 		alt="Svelte Logo"
 		draggable="false"
 		in:fly={{ y: 100, duration: 1500 }}
