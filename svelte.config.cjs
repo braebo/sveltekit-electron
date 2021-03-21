@@ -3,7 +3,7 @@ const svelte = require('@sveltejs/vite-plugin-svelte');
 const node = require('@sveltejs/adapter-node');
 const exclude = require('./svelte.exclude.config.js');
 
-const dev = process.env.NODE_ENV === 'dev'
+const dev = process.env.NODE_ENV == 'development'
 
 /** @type {import('@sveltejs/kit').Config} */
 module.exports = {
@@ -27,6 +27,7 @@ module.exports = {
 			template: 'src/app.html',
 		},
 		vite: {
+			compilerOptions: { dev },
 			server: {
 				open: false,
 				port: process.env.PORT || 3333,
