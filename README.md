@@ -1,14 +1,12 @@
-<center>
-
-![img](/public/sveltekit-electron.svg)
+<p align="center">
+  <img src="/public/sveltekit-electron.svg" />
+</p>
 
 # [Sveltekit](https://github.com/sveltejs/kit#readme) + [Electron](https://www.electronjs.org/)
 
-This template should help get you started developing with Sveltekit in Electron.
+Minimal Sveltekit + Electron starter template.
 
 <br />
-
-</center>
 
 ## Getting Started
 
@@ -16,7 +14,9 @@ This template should help get you started developing with Sveltekit in Electron.
 
 <br />
 
-<img src="screenshot.png" style="border-radius:10px;box-shadow: 0 4px 5px 3px #0001;display:flex;margin:auto" />
+<p align="center">
+  <img src="screenshot.png" />
+</p>
 
 ## Recommended IDE Setup
 
