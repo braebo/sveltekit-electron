@@ -4,3 +4,4 @@ dist/
 .DS_Store
 *.local
 types/env.d.ts
+yarn-error.log
