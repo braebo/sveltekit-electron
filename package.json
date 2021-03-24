@@ -2,7 +2,8 @@
 	"name": "sveltekit-electron",
 	"version": "0.0.1",
 	"private": true,
-	"main": "src/main.js",
+	"description": "Minimal Sveltekit + Electron starter template.",
+	"main": "src/electron.js",
 	"scripts": {
 		"dev": "NODE_ENV=dev npm run dev:all",
 		"dev:all": "concurrently -n=svelte,electron -c=green,blue \"npm run dev:svelte\" \"npm run dev:electron\"",
@@ -11,7 +12,7 @@
 		"precompile": "cross-env MODE=production npm run build",
 		"build": "npm run build:svelte && npm run build:electron",
 		"build:svelte": "svelte-kit build",
-		"build:electron": "node scripts/build.js",
+		"build:electron": "electron-builder -mwl",
 		"package": "electron-forge package",
 		"make": "electron-forge make",
 		"publish": "electron-forge publish",
@@ -20,16 +21,16 @@
 	"browserslist": [
 		"Chrome 89"
 	],
-	"dependencies": {
-		"electron-updater": "^4.3.8"
+	"build": {
+		"appId": "com.example.app"
 	},
 	"devDependencies": {
 		"@rollup/plugin-alias": "^3.1.2",
-		"@rollup/plugin-commonjs": "18.0.0-1",
+		"@rollup/plugin-commonjs": "^18.0.0-1",
 		"@rollup/plugin-json": "^4.1.0",
 		"@rollup/plugin-node-resolve": "^11.2.0",
-		"@sveltejs/adapter-node": "^1.0.0-next.9",
-		"@sveltejs/kit": "^1.0.0-next.54",
+		"@sveltejs/adapter-node": "^1.0.0-next.10",
+		"@sveltejs/kit": "^1.0.0-next.58",
 		"@sveltejs/vite-plugin-svelte": "^1.0.0-next.5",
 		"@types/concurrently": "^6.0.1",
 		"@types/electron-devtools-installer": "^2.2.0",
@@ -43,19 +44,27 @@
 		"concurrently": "^6.0.0",
 		"cross-env": "^7.0.3",
 		"dotenv": "^8.2.0",
-		"electron": "^12.0.1",
+		"electron": "^12.0.2",
 		"electron-builder": "^22.10.5",
 		"electron-connect": "^0.6.3",
 		"electron-context-menu": "^2.5.0",
 		"electron-devtools-installer": "^3.1.1",
+		"electron-packager": "^15.2.0",
+		"electron-reload": "^1.5.0",
 		"electron-reloader": "^1.2.0",
+		"electron-updater": "^4.3.8",
 		"electron-window-state": "^5.0.3",
 		"eslint": "^7.22.0",
 		"eslint-plugin-svelte": "^1.1.2",
 		"npm-run-all": "^4.1.5",
+		"ora": "^5.4.0",
 		"prettier": "^2.2.1",
 		"prettier-plugin-svelte": "^2.2.0",
+		"rollup": "^1.20.0",
 		"rollup-plugin-esbuild": "^3.0.2",
+		"rollup-plugin-livereload": "^1.3.0",
+		"rollup-plugin-svelte": "^5.2.3",
+		"rollup-plugin-terser": "^5.3.1",
 		"spectron": "^14.0.0",
 		"svelte": "^3.35.0",
 		"svelte-check": "^1.2.6",
@@ -67,39 +76,5 @@
 	"engines": {
 		"node": ">=v14.16.0",
 		"npm": ">=7.6.3"
-	},
-	"build": {
-		"appId": "xxx@gmail.com",
-		"electronDownload": {
-			"mirror": "https://npm.taobao.org/mirrors/electron/"
-		},
-		"files": [
-			"!node_modules",
-			"dist/main/**",
-			"dist/render/**"
-		],
-		"mac": {
-			"artifactName": "${productName}_setup_${version}.${ext}",
-			"target": [
-				"dmg"
-			]
-		},
-		"win": {
-			"target": [
-				{
-					"target": "nsis",
-					"arch": [
-						"x64"
-					]
-				}
-			],
-			"artifactName": "${productName}_setup_${version}.${ext}"
-		}
-	},
-	"nsis": {
-		"oneClick": false,
-		"perMachine": false,
-		"allowToChangeInstallationDirectory": true,
-		"deleteAppDataOnUninstall": true
 	}
 }

@@ -16,14 +16,14 @@ module.exports = {
 	kit: {
 		adapter: node(),
 		prerender: {
-			enabled: false
+			enabled: false,
 		},
 		files: {
 			assets: 'public',
 			lib: 'src/lib',
 			routes: 'src/routes',
-			serviceWorker: 'src/service-worker',
-			setup: 'src/setup',
+			// serviceWorker: 'src/service-worker',
+			// setup: 'src/setup',
 			template: 'src/app.html',
 		},
 		vite: {

@@ -18,7 +18,7 @@ const prefetchRoutes = import.meta.env.SSR ? guard('prefetchRoutes') : prefetchR
  * @param {string} href
  * @param {{
  *   noscroll?: boolean;
- *   resplaceState?: boolean;
+ *   replaceState?: boolean;
  * }} [opts]
  */
 async function goto_(href, opts) {
@@ -32,11 +32,11 @@ function prefetch_(href) {
 
 /** @param {string[]} [pathnames] */
 async function prefetchRoutes_(pathnames) {
-	const path_routes = pathnames
-		? router.pages.filter((page) => pathnames.some((pathname) => page.pattern.test(pathname)))
-		: router.pages;
+	const matching = pathnames
+		? router.routes.filter((route) => pathnames.some((pathname) => route[0].test(pathname)))
+		: router.routes;
 
-	const promises = path_routes.map((r) => Promise.all(r.parts.map((load) => load())));
+	const promises = matching.map((r) => r.length !== 1 && Promise.all(r[1].map((load) => load())));
 
 	await Promise.all(promises);
 }

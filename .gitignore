@@ -4,3 +4,6 @@ dist/
 .DS_Store
 *.local
 types/env.d.ts
+build/
+.svelte/
+pnpm-lock.yaml

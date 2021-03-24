@@ -7,17 +7,9 @@ const components = [
 const d = decodeURIComponent;
 const empty = () => ({});
 
-export const pages = [
-	{
-		// src/routes/index.svelte
-		pattern: /^\/$/,
-		params: empty,
-		parts: [components[0]]
-	}
-];
-
-export const ignore = [
-	
+export const routes = [
+	// src/routes/index.svelte
+[/^\/$/, [components[0]]]
 ];
 
 export { layout };
