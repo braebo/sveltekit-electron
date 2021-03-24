@@ -4,6 +4,11 @@ dist/
 .DS_Store
 *.local
 types/env.d.ts
+<<<<<<< HEAD
 build/
 .svelte/
 pnpm-lock.yaml
+yarn-error.log
+=======
+yarn-error.log
+>>>>>>> eb0ee785e467e611426c6b8ade505ad8282f7498
