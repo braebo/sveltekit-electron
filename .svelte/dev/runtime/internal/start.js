@@ -1,6 +1,6 @@
 import Root from '../../generated/root.svelte';
 import { routes, layout } from '../../generated/manifest.js';
-import { f as find_anchor, g as get_base_uri } from '../chunks/utils.js';
+import { g as get_base_uri } from '../chunks/utils.js';
 import { writable } from 'svelte/store';
 import { init } from './singletons.js';
 import { set_paths } from '../paths.js';
@@ -12,6 +12,15 @@ function scroll_state() {
 	};
 }
 
+/**
+ * @param {Node} node
+ * @returns {HTMLAnchorElement | SVGAElement}
+ */
+function find_anchor(node) {
+	while (node && node.nodeName.toUpperCase() !== 'A') node = node.parentNode; // SVG <a> elements have a lowercase name
+	return /** @type {HTMLAnchorElement | SVGAElement} */ (node);
+}
+
 class Router {
 	/** @param {{
 	 *    base: string;
@@ -20,12 +29,6 @@ class Router {
 	constructor({ base, routes }) {
 		this.base = base;
 		this.routes = routes;
-
-		this.history = window.history || {
-			pushState: () => {},
-			replaceState: () => {},
-			scrollRestoration: 'auto'
-		};
 	}
 
 	/** @param {import('./renderer').Renderer} renderer */
@@ -34,8 +37,10 @@ class Router {
 		this.renderer = renderer;
 		renderer.router = this;
 
-		if ('scrollRestoration' in this.history) {
-			this.history.scrollRestoration = 'manual';
+		this.enabled = true;
+
+		if ('scrollRestoration' in history) {
+			history.scrollRestoration = 'manual';
 		}
 
 		// Adopted from Nuxt.js
@@ -43,12 +48,12 @@ class Router {
 		// and back-navigation from other pages to use the browser to restore the
 		// scrolling position.
 		addEventListener('beforeunload', () => {
-			this.history.scrollRestoration = 'auto';
+			history.scrollRestoration = 'auto';
 		});
 
 		// Setting scrollRestoration to manual again when returning to this page.
 		addEventListener('load', () => {
-			this.history.scrollRestoration = 'manual';
+			history.scrollRestoration = 'manual';
 		});
 
 		// There's no API to capture the scroll location right before the user
@@ -70,7 +75,31 @@ class Router {
 		});
 
 		/** @param {MouseEvent} event */
+		const trigger_prefetch = (event) => {
+			const a = find_anchor(/** @type {Node} */ (event.target));
+			if (a && a.hasAttribute('sveltekit:prefetch')) {
+				this.prefetch(new URL(/** @type {string} */ (a.href)));
+			}
+		};
+
+		/** @type {NodeJS.Timeout} */
+		let mousemove_timeout;
+
+		/** @param {MouseEvent} event */
+		const handle_mousemove = (event) => {
+			clearTimeout(mousemove_timeout);
+			mousemove_timeout = setTimeout(() => {
+				trigger_prefetch(event);
+			}, 20);
+		};
+
+		addEventListener('touchstart', trigger_prefetch);
+		addEventListener('mousemove', handle_mousemove);
+
+		/** @param {MouseEvent} event */
 		addEventListener('click', (event) => {
+			if (!this.enabled) return;
+
 			// Adapted from https://github.com/visionmedia/page.js
 			// MIT license https://github.com/visionmedia/page.js#license
 			if (event.button || event.which !== 1) return;
@@ -108,14 +137,14 @@ class Router {
 			const info = this.parse(url);
 			if (info) {
 				const noscroll = a.hasAttribute('sveltekit:noscroll');
-				this.history.pushState({}, '', url.href);
+				history.pushState({}, '', url.href);
 				this._navigate(info, noscroll ? scroll_state() : null, [], url.hash);
 				event.preventDefault();
 			}
 		});
 
 		addEventListener('popstate', (event) => {
-			if (event.state) {
+			if (event.state && this.enabled) {
 				const url = new URL(location.href);
 				const info = this.parse(url);
 				if (info) {
@@ -131,7 +160,7 @@ class Router {
 		document.body.setAttribute('tabindex', '-1');
 
 		// create initial history entry, so we can return here
-		this.history.replaceState({}, '', location.href);
+		history.replaceState(history.state || {}, '', location.href);
 	}
 
 	/**
@@ -147,11 +176,10 @@ class Router {
 		const routes = this.routes.filter(([pattern]) => pattern.test(path));
 
 		if (routes.length > 0) {
-			return {
-				routes,
-				path,
-				query: new URLSearchParams(url.search)
-			};
+			const query = new URLSearchParams(url.search);
+			const id = `${path}?${query}`;
+
+			return { id, routes, path, query };
 		}
 	}
 
@@ -161,19 +189,43 @@ class Router {
 	 * @param {string[]} chain
 	 */
 	async goto(href, { noscroll = false, replaceState = false } = {}, chain) {
-		const url = new URL(href, get_base_uri(document));
-		const info = this.parse(url);
+		if (this.enabled) {
+			const url = new URL(href, get_base_uri(document));
+			const info = this.parse(url);
 
-		if (info) {
-			// TODO shouldn't need to pass the hash here
-			this.history[replaceState ? 'replaceState' : 'pushState']({}, '', href);
-			return this._navigate(info, noscroll ? scroll_state() : null, chain, url.hash);
+			if (info) {
+				// TODO shouldn't need to pass the hash here
+				history[replaceState ? 'replaceState' : 'pushState']({}, '', href);
+				return this._navigate(info, noscroll ? scroll_state() : null, chain, url.hash);
+			}
 		}
 
 		location.href = href;
 		return new Promise(() => {
 			/* never resolves */
 		});
+	}
+
+	enable() {
+		this.enabled = true;
+	}
+
+	disable() {
+		this.enabled = false;
+	}
+
+	/**
+	 * @param {URL} url
+	 * @returns {Promise<import('./types').NavigationResult>}
+	 */
+	async prefetch(url) {
+		const info = this.parse(url);
+
+		if (info) {
+			return this.renderer.load(info);
+		} else {
+			throw new Error(`Could not prefetch ${url.href}`);
+		}
 	}
 
 	/**
@@ -288,6 +340,21 @@ function page_store(value) {
 	return { notify, set, subscribe };
 }
 
+/**
+ * @param {RequestInfo} resource
+ * @param {RequestInit} opts
+ */
+function initial_fetch(resource, opts) {
+	const url = typeof resource === 'string' ? resource : resource.url;
+	const script = document.querySelector(`script[type="svelte-data"][url="${url}"]`);
+	if (script) {
+		const { body, ...init } = JSON.parse(script.textContent);
+		return Promise.resolve(new Response(body, init));
+	}
+
+	return fetch(resource, opts);
+}
+
 class Renderer {
 	/** @param {{
 	 *   Root: import('types.internal').CSRComponent;
@@ -304,7 +371,6 @@ class Renderer {
 		/** @type {import('./router').Router} */
 		this.router = null;
 
-		// TODO ideally we wouldn't need to store these...
 		this.target = target;
 
 		this.started = false;
@@ -320,8 +386,8 @@ class Renderer {
 
 		this.caches = new Map();
 
-		this.prefetching = {
-			href: null,
+		this.loading = {
+			id: null,
 			promise: null
 		};
 
@@ -334,28 +400,6 @@ class Renderer {
 		this.$session = null;
 
 		this.root = null;
-
-		/** @param {MouseEvent} event */
-		const trigger_prefetch = (event) => {
-			const a = find_anchor(/** @type {Node} */ (event.target));
-			if (a && a.hasAttribute('sveltekit:prefetch')) {
-				this.prefetch(new URL(/** @type {string} */ (a.href)));
-			}
-		};
-
-		/** @type {NodeJS.Timeout} */
-		let mousemove_timeout;
-
-		/** @param {MouseEvent} event */
-		const handle_mousemove = (event) => {
-			clearTimeout(mousemove_timeout);
-			mousemove_timeout = setTimeout(() => {
-				trigger_prefetch(event);
-			}, 20);
-		};
-
-		addEventListener('touchstart', trigger_prefetch);
-		addEventListener('mousemove', handle_mousemove);
 
 		let ready = false;
 		this.stores.session.subscribe(async (value) => {
@@ -372,63 +416,36 @@ class Renderer {
 
 	/**
 	 * @param {import('./types').NavigationCandidate} selected
-	 * @param {number} status
-	 * @param {Error} error
 	 */
-	async start(selected, status, error) {
-		/** @type {Record<string, any>} */
-		const props = {
-			stores: this.stores,
-			error,
-			status,
-			page: selected.page
-		};
+	async start(selected) {
+		const result = await this._load(selected);
 
-		if (error) {
-			props.components = [this.layout.default];
-		} else {
-			const hydrated = await this._hydrate(selected);
-
-			if (hydrated.redirect) {
-				throw new Error('TODO client-side redirects');
-			}
-
-			Object.assign(props, hydrated.props);
-			this.current = hydrated.state;
+		if (result.redirect) {
+			// this is a real edge case — `load` would need to return
+			// a redirect but only in the browser
+			location.href = new URL(result.redirect, location.href).href;
+			return;
 		}
 
-		// remove dev-mode SSR <style> insert, since it doesn't apply
-		// to hydrated markup (HMR requires hashes to be rewritten)
-		// TODO only in dev
-		// TODO it seems this doesn't always work with the classname
-		// stabilisation in vite-plugin-svelte? see e.g.
-		// hn.svelte.dev
-		// const style = document.querySelector('style[data-svelte]');
-		// if (style) style.remove();
-
-		this.root = new this.Root({
-			target: this.target,
-			props,
-			hydrate: true
-		});
-
-		this.started = true;
+		this._init(result);
 	}
 
 	/** @param {{ path: string, query: URLSearchParams }} destination */
 	notify({ path, query }) {
 		dispatchEvent(new CustomEvent('sveltekit:navigation-start'));
 
-		this.stores.navigating.set({
-			from: {
-				path: this.current.page.path,
-				query: this.current.page.query
-			},
-			to: {
-				path,
-				query
-			}
-		});
+		if (this.started) {
+			this.stores.navigating.set({
+				from: {
+					path: this.current.page.path,
+					query: this.current.page.query
+				},
+				to: {
+					path,
+					query
+				}
+			});
+		}
 	}
 
 	/**
@@ -445,48 +462,43 @@ class Renderer {
 		if (navigation_result.reload) {
 			location.reload();
 		} else if (navigation_result.redirect) {
-			if (chain.length > 10 || chain.includes(this.current.page.path)) {
+			if (chain.length > 10 || chain.includes(info.path)) {
 				this.root.$set({
 					status: 500,
 					error: new Error('Redirect loop')
 				});
 			} else {
-				this.router.goto(navigation_result.redirect, { replaceState: true }, [
-					...chain,
-					this.current.page.path
-				]);
+				if (this.router) {
+					this.router.goto(navigation_result.redirect, { replaceState: true }, [
+						...chain,
+						info.path
+					]);
+				} else {
+					location.href = new URL(navigation_result.redirect, location.href).href;
+				}
 
 				return;
 			}
-		} else {
+		} else if (this.started) {
 			this.current = navigation_result.state;
 
 			this.root.$set(navigation_result.props);
 			this.stores.navigating.set(null);
 
 			await 0;
+		} else {
+			this._init(navigation_result);
 		}
 
 		dispatchEvent(new CustomEvent('sveltekit:navigation-end'));
-	}
+		this.loading.promise = null;
+		this.loading.id = null;
 
-	/**
-	 * @param {URL} url
-	 * @returns {Promise<import('./types').NavigationResult>}
-	 */
-	async prefetch(url) {
-		const info = this.router.parse(url);
-		if (info) {
-			if (url.href !== this.prefetching.href) {
-				this.prefetching = {
-					href: url.href,
-					promise: this._get_navigation_result(info)
-				};
-			}
-
-			return this.prefetching.promise;
+		const leaf_node = navigation_result.state.nodes[navigation_result.state.nodes.length - 1];
+		if (leaf_node.module.router === false) {
+			this.router.disable();
 		} else {
-			throw new Error(`Could not prefetch ${url.href}`);
+			this.router.enable();
 		}
 	}
 
@@ -494,7 +506,22 @@ class Renderer {
 	 * @param {import('./types').NavigationInfo} info
 	 * @returns {Promise<import('./types').NavigationResult>}
 	 */
+	load(info) {
+		this.loading.promise = this._get_navigation_result(info);
+		this.loading.id = info.id;
+
+		return this.loading.promise;
+	}
+
+	/**
+	 * @param {import('./types').NavigationInfo} info
+	 * @returns {Promise<import('./types').NavigationResult>}
+	 */
 	async _get_navigation_result(info) {
+		if (this.loading.id === info.id) {
+			return this.loading.promise;
+		}
+
 		for (let i = 0; i < info.routes.length; i += 1) {
 			const route = info.routes[i];
 			const [pattern, parts, params] = route;
@@ -524,74 +551,69 @@ class Renderer {
 				query: info.query
 			};
 
-			const hydrated = await this._hydrate({ nodes, page });
-			if (hydrated) return hydrated;
+			const result = await this._load({ status: 200, error: null, nodes, page });
+			if (result) return result;
 		}
 
-		return {
-			state: {
-				page: null,
-				query: null,
-				session_changed: false,
-				contexts: [],
-				nodes: []
-			},
-			props: {
-				status: 404,
-				error: new Error(`Not found: ${info.path}`)
+		return await this._load({
+			status: 404,
+			error: new Error(`Not found: ${info.path}`),
+			nodes: [],
+			page: {
+				host: this.host,
+				path: info.path,
+				query: info.query,
+				params: {}
 			}
-		};
+		});
 	}
 
-	/** @param {import('./types').NavigationCandidate} selected */
-	async _hydrate({ nodes, page }) {
-		/** @type {Record<string, any>} */
-		const props = {
-			status: 200,
+	/** @param {import('./types').NavigationResult} result */
+	_init(result) {
+		this.current = result.state;
 
-			/** @type {Error} */
-			error: null,
+		const style = document.querySelector('style[data-svelte]');
+		if (style) style.remove();
 
-			/** @type {import('types.internal').CSRComponent[]} */
-			components: []
-		};
+		this.root = new this.Root({
+			target: this.target,
+			props: {
+				stores: this.stores,
+				...result.props
+			},
+			hydrate: true
+		});
 
-		/**
-		 * @param {RequestInfo} resource
-		 * @param {RequestInit} opts
-		 */
-		const fetcher = (resource, opts) => {
-			if (!this.started) {
-				const url = typeof resource === 'string' ? resource : resource.url;
-				const script = document.querySelector(`script[type="svelte-data"][url="${url}"]`);
-				if (script) {
-					const { body, ...init } = JSON.parse(script.textContent);
-					return Promise.resolve(new Response(body, init));
-				}
-			}
+		this.started = true;
+	}
 
-			return fetch(resource, opts);
-		};
-
+	/**
+	 * @param {import('./types').NavigationCandidate} selected
+	 * @returns {Promise<import('./types').NavigationResult>}
+	 */
+	async _load({ status, error, nodes, page }) {
 		const query = page.query.toString();
 
-		/** @type {import('./types').NavigationState} */
-		const state = {
-			page,
-			query,
-			session_changed: false,
-			nodes: [],
-			contexts: []
+		/** @type {import('./types').NavigationResult} */
+		const result = {
+			state: {
+				page,
+				query,
+				session_changed: false,
+				nodes: [],
+				contexts: []
+			},
+			props: {
+				status,
+				error,
+
+				/** @type {import('types.internal').CSRComponent[]} */
+				components: []
+			}
 		};
 
-		const component_promises = [this.layout, ...nodes];
-		const props_promises = [];
-
-		/** @type {Record<string, any>} */
-		let context;
-		let redirect;
-
 		const changed = {
+			path: !this.current.page || page.path !== this.current.page.path,
 			params: Object.keys(page.params).filter((key) => {
 				return !this.current.page || this.current.page.params[key] !== page.params[key];
 			}),
@@ -601,22 +623,29 @@ class Renderer {
 		};
 
 		try {
+			const component_promises = [this.layout, ...nodes];
+			const props_promises = [];
+
+			/** @type {Record<string, any>} */
+			let context;
+
 			for (let i = 0; i < component_promises.length; i += 1) {
 				const previous = this.current.nodes[i];
 				const previous_context = this.current.contexts[i];
 
-				const { default: component, preload, load } = await component_promises[i];
-				props.components[i] = component;
+				const module = await component_promises[i];
+				result.props.components[i] = module.default;
 
-				if (preload) {
+				if (module.preload) {
 					throw new Error(
-						'preload has been deprecated in favour of load. Please consult the documentation: https://kit.svelte.dev/docs#load'
+						'preload has been deprecated in favour of load. Please consult the documentation: https://kit.svelte.dev/docs#loading'
 					);
 				}
 
 				const changed_since_last_render =
 					!previous ||
-					component !== previous.component ||
+					module !== previous.module ||
+					(changed.path && previous.uses.path) ||
 					changed.params.some((param) => previous.uses.params.has(param)) ||
 					(changed.query && previous.uses.query) ||
 					(changed.session && previous.uses.session) ||
@@ -626,7 +655,7 @@ class Renderer {
 					const hash = page.path + query;
 
 					// see if we have some cached data
-					const cache = this.caches.get(component);
+					const cache = this.caches.get(module);
 					const cached = cache && cache.get(hash);
 
 					/** @type {import('./types').PageNode} */
@@ -639,9 +668,10 @@ class Renderer {
 						({ node, loaded } = cached);
 					} else {
 						node = {
-							component,
+							module,
 							uses: {
 								params: new Set(),
+								path: false,
 								query: false,
 								session: false,
 								context: false
@@ -661,12 +691,15 @@ class Renderer {
 
 						const session = this.$session;
 
-						if (load) {
-							loaded = await load.call(null, {
+						if (module.load) {
+							loaded = await module.load.call(null, {
 								page: {
 									host: page.host,
-									path: page.path,
 									params,
+									get path() {
+										node.uses.path = true;
+										return page.path;
+									},
 									get query() {
 										node.uses.query = true;
 										return page.query;
@@ -680,10 +713,12 @@ class Renderer {
 									node.uses.context = true;
 									return { ...context };
 								},
-								fetch: fetcher
+								fetch: this.started ? fetch : initial_fetch
 							});
 
-							if (!loaded) return;
+							// if the page component returns nothing from load, fall through
+							const is_leaf = i === component_promises.length - 1 && !error;
+							if (!loaded && is_leaf) return;
 						}
 					}
 
@@ -691,16 +726,28 @@ class Renderer {
 						loaded = normalize(loaded);
 
 						if (loaded.error) {
-							props.error = loaded.error;
-							props.status = loaded.status || 500;
-							state.nodes = [];
-							return { redirect, props, state };
+							if (error) {
+								// error while rendering error page, oops
+								throw error;
+							}
+
+							return await this._load({
+								status: loaded.status || 500,
+								error: loaded.error,
+								nodes: [],
+								page: {
+									host: page.host,
+									path: page.path,
+									query: page.query,
+									params: {}
+								}
+							});
 						}
 
 						if (loaded.redirect) {
-							// TODO return from here?
-							redirect = loaded.redirect;
-							break;
+							return {
+								redirect: loaded.redirect
+							};
 						}
 
 						if (loaded.context) {
@@ -713,11 +760,11 @@ class Renderer {
 						}
 
 						if (loaded.maxage) {
-							if (!this.caches.has(component)) {
-								this.caches.set(component, new Map());
+							if (!this.caches.has(module)) {
+								this.caches.set(module, new Map());
 							}
 
-							const cache = this.caches.get(component);
+							const cache = this.caches.get(module);
 							const cached = { node, loaded };
 
 							cache.set(hash, cached);
@@ -747,32 +794,44 @@ class Renderer {
 						props_promises[i] = loaded.props;
 					}
 
-					state.nodes[i] = node;
-					state.contexts[i] = context;
+					result.state.nodes[i] = node;
+					result.state.contexts[i] = context;
 				} else {
-					state.nodes[i] = previous;
-					state.contexts[i] = context = previous_context;
+					result.state.nodes[i] = previous;
+					result.state.contexts[i] = context = previous_context;
 				}
 			}
 
-			const new_props = await Promise.all(props_promises);
-
-			new_props.forEach((p, i) => {
+			// we allow returned `props` to be a Promise so that
+			// layout/page loads can happen in parallel
+			(await Promise.all(props_promises)).forEach((p, i) => {
 				if (p) {
-					props[`props_${i}`] = p;
+					result.props[`props_${i}`] = p;
 				}
 			});
 
 			if (!this.current.page || page.path !== this.current.page.path || changed.query) {
-				props.page = page;
+				result.props.page = page;
 			}
-		} catch (error) {
-			props.error = error;
-			props.status = 500;
-			state.nodes = [];
-		}
 
-		return { redirect, props, state };
+			return result;
+		} catch (e) {
+			if (error) {
+				throw error;
+			}
+
+			return await this._load({
+				status: 500,
+				error: e,
+				nodes: [],
+				page: {
+					host: page.host,
+					path: page.path,
+					query: page.query,
+					params: {}
+				}
+			});
+		}
 	}
 }
 
@@ -787,34 +846,39 @@ class Renderer {
  *   session: any;
  *   error: Error;
  *   status: number;
- *   nodes: import('./types').NavigationCandidate["nodes"];
- *   page: import('./types').NavigationCandidate["page"];
+ *   host: string;
+ *   route: boolean;
+ *   hydrate: import('./types').NavigationCandidate;
  * }} opts */
-async function start({ paths, target, session, error, status, nodes, page }) {
-	const router = new Router({
-		base: paths.base,
-		routes
-	});
+async function start({ paths, target, session, host, route, hydrate }) {
+	const router =
+		route &&
+		new Router({
+			base: paths.base,
+			routes
+		});
 
 	const renderer = new Renderer({
 		Root,
 		layout,
 		target,
 		session,
-		host: page.host
+		host
 	});
 
-	init({ router, renderer });
+	init(router);
 	set_paths(paths);
 
-	router.init(renderer);
-	await renderer.start({ nodes, page }, status, error);
+	if (hydrate) await renderer.start(hydrate);
+	if (route) router.init(renderer);
 
 	dispatchEvent(new CustomEvent('sveltekit:start'));
 }
 
 if (import.meta.env.VITE_SVELTEKIT_SERVICE_WORKER) {
-	navigator.serviceWorker.register(import.meta.env.VITE_SVELTEKIT_SERVICE_WORKER);
+	if ('serviceWorker' in navigator) {
+		navigator.serviceWorker.register(import.meta.env.VITE_SVELTEKIT_SERVICE_WORKER);
+	}
 }
 
 export { start };

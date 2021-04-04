@@ -4,7 +4,9 @@ const { app } = require('electron');
 
 try {
 	require('electron-reloader')(module);
-} catch {}
+} catch (e) {
+	console.error(e);
+}
 
 contextMenu({
 	showLookUpSelection: false,
@@ -43,7 +45,7 @@ function createMainWindow() {
 	if (isDev) {
 		loadVitePage(port);
 	} else {
-		mainWindow.loadFile('dist/index.html');
+		mainWindow.loadFile('dist/index.js');
 	}
 }
 

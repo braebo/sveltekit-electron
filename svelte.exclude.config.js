@@ -6,6 +6,7 @@
  Therefore, such dependencies should be marked as "external":
  they will not be optimized, will not be included in your bundle, and will be delivered as a separate node module.
 */
+
 const external = [
 	'path',
 	'electron',
@@ -53,5 +54,5 @@ const builtins = [
 	'vm',
 	'zlib',
 ];
-module.exports = [...builtins, ...external]
-// export default [...builtins, ...external];
+
+module.exports = [...builtins, ...external];

@@ -1,5 +1,5 @@
-const { app, screen, BrowserWindow } = require('electron');
 const windowStateKeeper = require('electron-window-state');
+const { app, BrowserWindow } = require('electron');
 
 const isProd = app.isPackaged;
 
@@ -28,21 +28,24 @@ module.exports = function createWindow(windowName = 'main', options = {}) {
 		defaultHeight: 600,
 	});
 
-	let win;
-
-	win = new BrowserWindow({
+	const mainWindow = new BrowserWindow({
 		...winOptions,
 		x: windowState.x,
 		y: windowState.y,
 		width: windowState.width,
 		height: windowState.height,
 	});
-	windowState.manage(win);
 
-	win.once('ready-to-show', () => {
-		win.show();
-		win.focus();
+	windowState.manage(mainWindow);
+
+	mainWindow.once('ready-to-show', () => {
+		mainWindow.show();
+		mainWindow.focus();
 	});
 
-	return win;
+	mainWindow.on('close', () => {
+		windowState.saveState(mainWindow);
+	})
+
+	return mainWindow;
 };

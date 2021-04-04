@@ -1,7 +1,8 @@
-const sveltePreprocess = require('svelte-preprocess');
 const svelte = require('@sveltejs/vite-plugin-svelte');
-const node = require('@sveltejs/adapter-node');
+const sveltePreprocess = require('svelte-preprocess');
 const exclude = require('./svelte.exclude.config.js');
+const static = require('@sveltejs/adapter-static');
+const node = require('@sveltejs/adapter-node');
 
 const dev = process.env.NODE_ENV == 'development'
 
@@ -14,7 +15,7 @@ module.exports = {
 	},
 	extensions: ['.svelte'],
 	kit: {
-		adapter: node(),
+		adapter: static(),
 		prerender: {
 			enabled: false,
 		},
@@ -22,11 +23,10 @@ module.exports = {
 			assets: 'public',
 			lib: 'src/lib',
 			routes: 'src/routes',
-			// serviceWorker: 'src/service-worker',
-			// setup: 'src/setup',
 			template: 'src/app.html',
 		},
 		vite: {
+			base: './',
 			compilerOptions: { dev },
 			server: {
 				open: false,
