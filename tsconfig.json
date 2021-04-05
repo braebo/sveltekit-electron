@@ -1,8 +1,8 @@
 {
 	"compilerOptions": {
-		"module": "esnext",
-		"target": "esnext",
-		"moduleResolution": "Node",
+		"module": "es2020",
+		"target": "es2020",
+		"moduleResolution": "node",
 		"strict": true,
 		"types": ["vite/client", "node"],
 		"typeRoots": ["node_modules/@types"],
@@ -22,7 +22,7 @@
 		"esModuleInterop": true,
 		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
-		"baseUrl": ".",
+		// "baseUrl": ".",
 		"allowJs": true,
 		"checkJs": false,
 		"paths": {
@@ -30,5 +30,5 @@
 			"$lib/*": ["src/lib/*"]
 		}
 	},
-	"include": ["src/**/*.d.ts", "src/**/*.js", "src/**/*.ts", "src/**/*.svelte"]
+	"include": ["src/**/*.d.ts", "src/**/*.js", "src/**/*.ts", "src/**/*.svelte", "src/electron.cjs"]
 }

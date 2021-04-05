@@ -8,3 +8,4 @@ build/
 .svelte/
 pnpm-lock.yaml
 yarn-error.log
+olddeps.json
