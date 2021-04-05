@@ -7,7 +7,7 @@ const dev = process.env.NODE_ENV == 'dev';
 /** @type {import("@sveltejs/kit").Config} */
 module.exports = {
 	kit: {
-		adapter: { adapt: static },
+		adapter: static(),
 		target: '#svelte',
 
 		vite: {
