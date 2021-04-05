@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/sveltekit-electron.svg" />
+  <img src="static/sveltekit-electron.svg" />
 </p>
 
 # Sveltekit + Electron
