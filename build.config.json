@@ -1,7 +1,6 @@
 {
 	"appId": "com.example.app",
 	"productName": "Svelte Electron",
-	"asar": false,
 	"directories": {
 		"output": "dist"
 	},
