@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="public/sveltekit-electron.svg" />
+  <img src="static/sveltekit-electron.svg" />
 </p>
 
 # Sveltekit + Electron
@@ -9,7 +9,7 @@ Minimal [Sveltekit](https://github.com/sveltejs/kit#readme) + [Electron](https:/
 <br />
 
 ## Getting Started
-> *Feel free to substitute `npm` with `yarn` or `pnpm`.*
+> *Feel free to substitute `npm` with `yarn`.  `pnpm` currently breaks builds.*
 
 |         |                                             |
 | ------- | ------------------------------------------- |
