@@ -1,6 +1,7 @@
 const windowStateManager = require('electron-window-state');
 const contextMenu = require('electron-context-menu');
 const { app, BrowserWindow } = require('electron');
+const { fork } = require('child_process');
 const serve = require('electron-serve');
 
 try {
@@ -81,9 +82,11 @@ function createMainWindow() {
 	mainWindow = createWindow();
 	mainWindow.once('close', () => { mainWindow = null });
 
-	dev
-	? loadVite(port)
-	: serveURL(mainWindow)
+	if (dev) loadVite(port);
+	else {
+		serveURL(mainWindow);
+		ssr = fork(`${__dirname}/../index.js`);
+	}
 }
 
 app.once('ready', createMainWindow);
