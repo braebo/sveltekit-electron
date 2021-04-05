@@ -12,6 +12,9 @@ const external = [
 	'electron',
 	'electron-updater',
 	'electron-window-state',
+	'electron-connect',
+	'electron-context-menu',
+	'electron-serve',
 ];
 
 const builtins = [

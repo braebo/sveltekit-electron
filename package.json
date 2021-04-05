@@ -6,16 +6,12 @@
 	"main": "src/electron.js",
 	"scripts": {
 		"dev": "NODE_ENV=dev npm run dev:all",
-		"dev:all": "concurrently -n=svelte,electron -c=green,blue \"npm run dev:svelte\" \"npm run dev:electron\"",
+		"dev:all": "concurrently -n=svelte,electron -c='#ff3e00',blue \"npm run dev:svelte\" \"npm run dev:electron\"",
 		"dev:svelte": "svelte-kit dev -p 3333",
 		"dev:electron": "electron src/electron.js",
-		"precompile": "cross-env MODE=production npm run build",
-		"build": "npm run build:svelte && npm run build:electron",
+		"build": "cross-env MODE=production npm run build:svelte && npm run build:electron",
 		"build:svelte": "svelte-kit build",
-		"build:electron": "electron-builder -mwl",
-		"package": "electron-forge package",
-		"make": "electron-forge make",
-		"publish": "electron-forge publish",
+		"build:electron": "electron-builder -m",
 		"start": "svelte-kit start"
 	},
 	"browserslist": [
@@ -24,6 +20,7 @@
 	"build": {
 		"appId": "com.example.app",
 		"productName": "Svelte Electron",
+		"asar": false,
 		"directories": {
 			"output": "dist"
 		},
@@ -94,6 +91,8 @@
 	"dependencies": {
 		"electron-connect": "^0.6.3",
 		"electron-context-menu": "^2.5.0",
+		"electron-serve": "^1.1.0",
 		"electron-window-state": "^5.0.3"
+
 	}
 }

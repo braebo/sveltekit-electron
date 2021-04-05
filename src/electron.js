@@ -1,6 +1,12 @@
 const createWindow = require('./lib/utils/create-window');
 const contextMenu = require('electron-context-menu');
+const serve = require('electron-serve');
 const { app } = require('electron');
+
+const port = process.env.PORT || 3333;
+const isDev = !app.isPackaged;
+
+let mainWindow;
 
 try {
 	require('electron-reloader')(module);
@@ -19,17 +25,19 @@ contextMenu({
 	],
 });
 
-const port = process.env.PORT || 3333;
-const isDev = !app.isPackaged;
-
-let mainWindow;
-
-function loadVitePage(port) {
+function loadViteDev(port) {
 	mainWindow.loadURL(`http://localhost:${port}`).catch((err) => {
-		console.log('VITE NOT READY, WILL TRY AGAIN IN 200ms');
+		console.log('Vite unable to load URL, retrying in 200ms');
 		setTimeout(() => {
-			// do it again as the vite build can take a bit longer the first time
-			loadVitePage(port);
+			loadViteDev(port); // retry
+		}, 200);
+	});
+}
+function loadViteProd() {
+	mainWindow.loadURL({directory: '.'}).catch((err) => {
+		console.log('Vite unable to load URL, retrying in 200ms');
+		setTimeout(() => {
+			loadViteProd(); // retry
 		}, 200);
 	});
 }
@@ -43,9 +51,10 @@ function createMainWindow() {
 	});
 
 	if (isDev) {
-		loadVitePage(port);
+		loadViteDev(port);
 	} else {
-		mainWindow.loadFile('dist/index.js');
+		loadViteProd()
+		// mainWindow.loadFile('dist/index.html');
 	}
 }
 

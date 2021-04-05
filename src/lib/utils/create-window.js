@@ -1,4 +1,4 @@
-const windowStateKeeper = require('electron-window-state');
+const windowStateManager = require('electron-window-state');
 const { app, BrowserWindow } = require('electron');
 
 const isProd = app.isPackaged;
@@ -16,14 +16,15 @@ module.exports = function createWindow(windowName = 'main', options = {}) {
 		...options,
 		webPreferences: {
 			contextIsolation: true,
-			devTools: !isProd,
+			// devTools: !isProd,
+			devTools: true, // FIXME: Just for debugging build.
 			spellcheck: false,
 			nodeIntegration: true,
 			...(options.webPreferences || {}),
 		},
 	};
 
-	let windowState = windowStateKeeper({
+	let windowState = windowStateManager({
 		defaultWidth: 800,
 		defaultHeight: 600,
 	});

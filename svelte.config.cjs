@@ -2,7 +2,7 @@ const svelte = require('@sveltejs/vite-plugin-svelte');
 const sveltePreprocess = require('svelte-preprocess');
 const exclude = require('./svelte.exclude.config.js');
 const static = require('@sveltejs/adapter-static');
-const node = require('@sveltejs/adapter-node');
+const json = require('@rollup/plugin-json');
 
 const dev = process.env.NODE_ENV == 'development'
 
@@ -15,7 +15,7 @@ module.exports = {
 	},
 	extensions: ['.svelte'],
 	kit: {
-		adapter: static(),
+		adapter: {adapt: static},
 		prerender: {
 			enabled: false,
 		},
@@ -33,7 +33,7 @@ module.exports = {
 				port: process.env.PORT || 3333,
 			},
 			optimizeDeps: { exclude },
-			plugins: [svelte],
+			plugins: [svelte, json],
 		},
 	},
 	// @ts-expect-error

@@ -1677,6 +1677,11 @@ electron-reloader@^1.2.0:
     electron-is-dev "^1.2.0"
     find-up "^5.0.0"
 
+electron-serve@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/electron-serve/-/electron-serve-1.1.0.tgz#507f56c8512c501880d3a9bec792fa92512af378"
+  integrity sha512-tQJBCbXKoKCfkBC143QCqnEtT1s8dNE2V+b/82NF6lxnGO/2Q3a3GSLHtKl3iEDQgdzTf9pH7p418xq2rXbz1Q==
+
 electron-updater@^4.3.8:
   version "4.3.8"
   resolved "https://registry.yarnpkg.com/electron-updater/-/electron-updater-4.3.8.tgz#94f1731682a756385726183e2b04b959cb319456"
