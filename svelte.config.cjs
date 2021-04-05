@@ -1,41 +1,20 @@
-const svelte = require('@sveltejs/vite-plugin-svelte');
 const sveltePreprocess = require('svelte-preprocess');
-const exclude = require('./svelte.exclude.config.js');
 const static = require('@sveltejs/adapter-static');
-const json = require('@rollup/plugin-json');
+const pkg = require('./package.json');
 
-const dev = process.env.NODE_ENV == 'development'
+const dev = process.env.NODE_ENV == 'dev';
 
-/** @type {import('@sveltejs/kit').Config} */
+/** @type {import("@sveltejs/kit").Config} */
 module.exports = {
-	compilerOptions: {
-		dev,
-		css: false,
-		preserveWhitespace: true,
-	},
-	extensions: ['.svelte'],
 	kit: {
-		adapter: {adapt: static},
-		prerender: {
-			enabled: false,
-		},
-		files: {
-			assets: 'public',
-			lib: 'src/lib',
-			routes: 'src/routes',
-			template: 'src/app.html',
-		},
+		adapter: { adapt: static },
+		target: '#svelte',
+
 		vite: {
-			base: './',
 			compilerOptions: { dev },
-			server: {
-				open: false,
-				port: process.env.PORT || 3333,
-			},
-			optimizeDeps: { exclude },
-			plugins: [svelte, json],
+			ssr: { noExternal: Object.keys(pkg.dependencies || {}) },
 		},
 	},
 	// @ts-expect-error
-	preprocess: sveltePreprocess({ typescript: true }),
+	preprocess: sveltePreprocess(),
 };

@@ -3,69 +3,56 @@
 	"version": "0.0.1",
 	"private": true,
 	"description": "Minimal Sveltekit + Electron starter template.",
-	"main": "src/electron.js",
+	"main": "src/electron.cjs",
+	"type": "module",
 	"scripts": {
 		"dev": "NODE_ENV=dev npm run dev:all",
 		"dev:all": "concurrently -n=svelte,electron -c='#ff3e00',blue \"npm run dev:svelte\" \"npm run dev:electron\"",
-		"dev:svelte": "svelte-kit dev -p 3333",
-		"dev:electron": "electron src/electron.js",
-		"build": "cross-env MODE=production npm run build:svelte && npm run build:electron",
+		"dev:svelte": "svelte-kit dev",
+		"dev:electron": "electron src/electron.cjs",
+		"build": "cross-env NODE_ENV=production npm run build:svelte && npm run build:electron",
 		"build:svelte": "svelte-kit build",
-		"build:electron": "electron-builder -m",
+		"build:electron": "electron-builder -mwl --config build.config.json",
 		"start": "svelte-kit start"
 	},
 	"browserslist": [
 		"Chrome 89"
 	],
-	"build": {
-		"appId": "com.example.app",
-		"productName": "Svelte Electron",
-		"asar": false,
-		"directories": {
-			"output": "dist"
-		},
-		"files": [
-			"src/electron.js",
-			"src/lib/utils/create-window.js",
-			{
-				"from": "build",
-				"to": ""
-			}
-		],
-		"mac": {
-			"category": "public.app-category.developer-tools",
-			"icon": "./public/icon.png",
-			"target": "default"
-		}
+	"dependencies": {
+		"electron-serve": "^1.1.0",
+		"electron-context-menu": "^2.5.0",
+		"electron-window-state": "^5.0.3"
 	},
 	"devDependencies": {
+		    "@sveltejs/adapter-node": "next",
+    "@sveltejs/adapter-static": "^1.0.0-next.0",
+    "@sveltejs/kit": "next",
+    "concurrently": "^6.0.0",
+    "electron": "^12.0.2",
+    "electron-builder": "^22.10.5",
+    "electron-reloader": "^1.2.0",
+    "sass": "^1.0.0",
+    "svelte": "^3.29.0",
+    "svelte-preprocess": "^4.0.0",
+    "vite": "^2.1.0",
 		"@rollup/plugin-alias": "^3.1.2",
-		"@rollup/plugin-commonjs": "^18.0.0-1",
+		"@rollup/plugin-commonjs": "^18.0.0",
 		"@rollup/plugin-json": "^4.1.0",
-		"@rollup/plugin-node-resolve": "^11.2.0",
-		"@sveltejs/adapter-node": "^1.0.0-next.10",
-		"@sveltejs/adapter-static": "^1.0.0-next.4",
-		"@sveltejs/kit": "^1.0.0-next.58",
+		"@rollup/plugin-node-resolve": "^11.2.1",
 		"@sveltejs/vite-plugin-svelte": "^1.0.0-next.5",
 		"@types/concurrently": "^6.0.1",
-		"@types/electron-devtools-installer": "^2.2.0",
 		"@types/electron-window-state": "^2.0.34",
-		"@types/eslint": "^7.2.7",
+		"@types/eslint": "^7.2.8",
 		"@types/prettier": "^2.2.3",
-		"@types/wait-on": "^5.2.0",
 		"@typescript-eslint/eslint-plugin": "^4.18.0",
 		"@typescript-eslint/parser": "^4.18.0",
 		"chokidar": "^3.5.1",
-		"concurrently": "^6.0.0",
 		"cross-env": "^7.0.3",
 		"dotenv": "^8.2.0",
-		"electron": "^12.0.2",
-		"electron-builder": "^22.10.5",
-		"electron-devtools-installer": "^3.1.1",
+		"electron-connect": "^0.6.3",
 		"electron-packager": "^15.2.0",
-		"electron-reloader": "^1.2.0",
 		"electron-updater": "^4.3.8",
-		"eslint": "^7.22.0",
+		"eslint": "^7.23.0",
 		"eslint-plugin-svelte": "^1.1.2",
 		"npm-run-all": "^4.1.5",
 		"ora": "^5.4.0",
@@ -77,22 +64,7 @@
 		"rollup-plugin-svelte": "^5.2.3",
 		"rollup-plugin-terser": "^5.3.1",
 		"spectron": "^14.0.0",
-		"svelte": "^3.35.0",
-		"svelte-check": "^1.2.6",
-		"svelte-preprocess": "^4.6.9",
-		"typescript": "^4.2.3",
-		"vite": "^2.1.2",
-		"wait-on": "^5.3.0"
-	},
-	"engines": {
-		"node": ">=v14.16.0",
-		"npm": ">=7.6.3"
-	},
-	"dependencies": {
-		"electron-connect": "^0.6.3",
-		"electron-context-menu": "^2.5.0",
-		"electron-serve": "^1.1.0",
-		"electron-window-state": "^5.0.3"
-
+		"svelte-check": "^1.3.0",
+		"typescript": "^4.2.3"
 	}
 }

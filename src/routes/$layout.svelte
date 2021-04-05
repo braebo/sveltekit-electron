@@ -1,8 +1,11 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
+
 	let ready: boolean = false;
+	onMount(() => (ready = true));
 </script>
 
-<svelte:window on:sveltekit:start={() => (ready = true)} />
+<!-- <svelte:window on:sveltekit:start={() => (ready = true)} /> -->
 
 <div class="dragbar" />
 
