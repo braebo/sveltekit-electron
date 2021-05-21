@@ -9,7 +9,7 @@ Minimal [Sveltekit](https://github.com/sveltejs/kit#readme) + [Electron](https:/
 <br />
 
 ## Getting Started
-> *Feel free to substitute `npm` with `yarn`.  `pnpm` currently breaks builds.*
+> *Feel free to substitute `npm` with `pnpm` or `yarn`.
 
 |         |                                             |
 | ------- | ------------------------------------------- |

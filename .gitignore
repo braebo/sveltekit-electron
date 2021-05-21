@@ -6,4 +6,3 @@ types/env.d.ts
 build/
 .svelte/
 yarn-error.log
-olddeps.json
