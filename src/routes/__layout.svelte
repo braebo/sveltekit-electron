@@ -3,9 +3,8 @@
 
 	let ready: boolean = false;
 	onMount(() => (ready = true));
-</script>
 
-<!-- <svelte:window on:sveltekit:start={() => (ready = true)} /> -->
+</script>
 
 <div class="dragbar" />
 
@@ -21,4 +20,5 @@
 		height: 40px;
 		width: 100%;
 	}
+
 </style>
