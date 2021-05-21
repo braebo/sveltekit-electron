@@ -69,7 +69,7 @@ contextMenu({
 });
 
 function loadVite(port) {
-	mainWindow.loadURL(`http://127.0.0.1:${port}`).catch((e) => {
+	mainWindow.loadURL(`http://localhost:${port}`).catch((e) => {
 		console.log('Error loading URL, retrying', e);
 		setTimeout(() => {
 			loadVite(port);
