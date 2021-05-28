@@ -74,9 +74,9 @@ function init(settings) {
     amp: false,
     dev: false,
     entry: {
-      file: "/./_app/start-d308aa30.js",
+      file: "/./_app/start-33bd4473.js",
       css: ["/./_app/assets/start-a8cd1609.css"],
-      js: ["/./_app/start-d308aa30.js", "/./_app/chunks/vendor-28a355f9.js"]
+      js: ["/./_app/start-33bd4473.js", "/./_app/chunks/vendor-643915a1.js"]
     },
     fetched: void 0,
     floc: false,
@@ -95,7 +95,7 @@ function init(settings) {
     read: settings.read,
     root: Root,
     router: true,
-    ssr: true,
+    ssr: false,
     target: "#svelte",
     template,
     trailing_slash: "never"
@@ -131,7 +131,7 @@ const module_lookup = {
     return index;
   })
 };
-const metadata_lookup = {"src/routes/__layout.svelte": {"entry": "/./_app/pages/__layout.svelte-515ac60e.js", "css": ["/./_app/assets/pages/__layout.svelte-b3f22837.css"], "js": ["/./_app/pages/__layout.svelte-515ac60e.js", "/./_app/chunks/vendor-28a355f9.js"], "styles": null}, ".svelte-kit/build/components/error.svelte": {"entry": "/./_app/error.svelte-a5c4f8a4.js", "css": [], "js": ["/./_app/error.svelte-a5c4f8a4.js", "/./_app/chunks/vendor-28a355f9.js"], "styles": null}, "src/routes/index.svelte": {"entry": "/./_app/pages/index.svelte-f372729e.js", "css": ["/./_app/assets/pages/index.svelte-bab0196d.css"], "js": ["/./_app/pages/index.svelte-f372729e.js", "/./_app/chunks/vendor-28a355f9.js"], "styles": null}};
+const metadata_lookup = {"src/routes/__layout.svelte": {"entry": "/./_app/pages/__layout.svelte-8ef6876d.js", "css": ["/./_app/assets/pages/__layout.svelte-b3f22837.css"], "js": ["/./_app/pages/__layout.svelte-8ef6876d.js", "/./_app/chunks/vendor-643915a1.js"], "styles": null}, ".svelte-kit/build/components/error.svelte": {"entry": "/./_app/error.svelte-d9c12dbf.js", "css": [], "js": ["/./_app/error.svelte-d9c12dbf.js", "/./_app/chunks/vendor-643915a1.js"], "styles": null}, "src/routes/index.svelte": {"entry": "/./_app/pages/index.svelte-c7de6ea2.js", "css": ["/./_app/assets/pages/index.svelte-bab0196d.css"], "js": ["/./_app/pages/index.svelte-c7de6ea2.js", "/./_app/chunks/vendor-643915a1.js"], "styles": null}};
 async function load_component(file) {
   return {
     module: await module_lookup[file](),

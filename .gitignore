@@ -3,6 +3,7 @@ types/env.d.ts
 yarn-error.log
 pnpm-lock.yaml
 node_modules/
+.svelte-kit/
 .DS_Store
 .svelte/
 *.local
