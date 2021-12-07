@@ -3,7 +3,6 @@
 
 	let ready: boolean = false;
 	onMount(() => (ready = true));
-
 </script>
 
 <div class="dragbar" />
@@ -20,5 +19,4 @@
 		height: 40px;
 		width: 100%;
 	}
-
 </style>

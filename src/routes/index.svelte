@@ -1,7 +1,6 @@
 <script lang="ts">
 	import Counter from '$lib/Counter.svelte';
 	import Logo from '$lib/Logo.svelte';
-
 </script>
 
 <main>
@@ -38,5 +37,4 @@
 			opacity: 1;
 		}
 	}
-
 </style>

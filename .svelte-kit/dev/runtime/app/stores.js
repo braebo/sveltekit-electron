@@ -1,7 +1,8 @@
 import { getContext } from 'svelte';
+import { browser } from './env.js';
+import '../env.js';
 
-// const ssr = (import.meta as any).env.SSR;
-const ssr = typeof window === 'undefined'; // TODO why doesn't previous line work in build?
+const ssr = !browser;
 
 // TODO remove this (for 1.0? after 1.0?)
 let warned = false;
@@ -26,7 +27,8 @@ const getStores = () => {
 		navigating: {
 			subscribe: stores.navigating.subscribe
 		},
-		// @ts-ignore - deprecated, not part of type definitions, but still callable
+		// TODO remove this (for 1.0? after 1.0?)
+		// @ts-expect-error - deprecated, not part of type definitions, but still callable
 		get preloading() {
 			console.error('stores.preloading is deprecated; use stores.navigating instead');
 			return {
@@ -48,7 +50,6 @@ const page = {
 
 /** @type {typeof import('$app/stores').navigating} */
 const navigating = {
-	/** @param {(value: any) => void} fn */
 	subscribe(fn) {
 		const store = getStores().navigating;
 		return store.subscribe(fn);
@@ -76,12 +77,8 @@ const session = {
 
 		return store.subscribe(fn);
 	},
-	set: (value) => {
-		error('set');
-	},
-	update: (updater) => {
-		error('update');
-	}
+	set: () => error('set'),
+	update: () => error('update')
 };
 
 export { getStores, navigating, page, session, stores };
