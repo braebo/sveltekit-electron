@@ -6,7 +6,7 @@
 	"main": "src/electron.cjs",
 	"type": "module",
 	"scripts": {
-		"dev": "NODE_ENV=dev npm run dev:all",
+		"dev": "cross-env NODE_ENV=dev npm run dev:all",
 		"dev:all": "concurrently -n=svelte,electron -c='#ff3e00',blue \"npm run dev:svelte\" \"npm run dev:electron\"",
 		"dev:svelte": "svelte-kit dev",
 		"dev:electron": "electron src/electron.cjs",
