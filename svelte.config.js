@@ -6,8 +6,15 @@ const config = {
 	kit: {
 		adapter: adapter({}),
 		target: '#svelte',
-		ssr: false,
 	},
 	preprocess: sveltePreprocess(),
 };
 export default config;
+
+/* Disabling Sveltekit SSR has to be done in the handle function now */
+export async function handle({ request, resolve }) {
+    const response = await resolve(request, {
+        ssr: false
+    });
+    return response;
+}
