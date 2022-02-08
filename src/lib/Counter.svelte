@@ -5,13 +5,14 @@
 
 	const count = getStore(id, 0);
 
-	const increment = () => {
+	const handleClick = () => {
 		$count += 1;
+		window.api.send('to-main', $count);
 	};
 </script>
 
-<button {id} on:click={increment}>
-	Clicks: {$count}
+<button {id} on:click={handleClick}>
+	Send Clicks to Electron: {$count}
 </button>
 
 <style>
