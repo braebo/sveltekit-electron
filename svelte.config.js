@@ -10,10 +10,10 @@ const config = {
 };
 export default config;
 
-/* Disabling Sveltekit SSR has to be done in the handle function now */
+/* Sveltekit SSR can be disabled in the handle function */
 export async function handle({ request, resolve }) {
-    const response = await resolve(request, {
-        ssr: false
-    });
-    return response;
+	const response = await resolve(request, {
+		ssr: false,
+	});
+	return response;
 }
