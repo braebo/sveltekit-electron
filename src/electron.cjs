@@ -1,7 +1,8 @@
 const windowStateManager = require('electron-window-state');
 const contextMenu = require('electron-context-menu');
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const serve = require('electron-serve');
+const path = require('path');
 
 try {
 	require('electron-reloader')(module);
@@ -36,6 +37,7 @@ function createWindow() {
 			nodeIntegration: true,
 			spellcheck: false,
 			devTools: dev,
+			preload: path.join(__dirname, "preload.cjs")
 		},
 		x: windowState.x,
 		y: windowState.y,
@@ -94,3 +96,7 @@ app.on('activate', () => {
 app.on('window-all-closed', () => {
 	if (process.platform !== 'darwin') app.quit();
 });
+
+ipcMain.on('to-main', (event, count) => {
+	return mainWindow.webContents.send('from-main', `next count is ${count+1}`);
+  })

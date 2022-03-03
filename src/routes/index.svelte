@@ -1,6 +1,16 @@
 <script lang="ts">
 	import Counter from '$lib/Counter.svelte';
 	import Logo from '$lib/Logo.svelte';
+	import { browser } from '$app/env';
+
+	let desktop: string;
+
+	if (browser) {
+		window.api.receive('from-main', (data: any) => {
+			desktop = `Received Message "${data}" from Electron`;
+			console.log(desktop);
+		});
+	}
 </script>
 
 <main>
@@ -9,6 +19,12 @@
 	<h1>Hello Electron!</h1>
 
 	<Counter id="0" />
+
+	{#if desktop}
+		<br />
+		<br />
+		{desktop}
+	{/if}
 </main>
 
 <style>
