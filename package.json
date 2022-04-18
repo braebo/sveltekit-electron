@@ -15,6 +15,11 @@
 		"build:electron": "electron-builder -mwl --config build.config.json",
 		"start": "svelte-kit start"
 	},
+	"engines": {
+		"npm": ">=7",
+		"pnpm": "use npm - https://github.com/FractalHQ/sveltekit-electron/issues/12#issuecomment-1068399385",
+		"yarn": "use npm - https://github.com/FractalHQ/sveltekit-electron/issues/12#issuecomment-1068399385"
+	},
 	"browserslist": [
 		"Chrome 89"
 	],
