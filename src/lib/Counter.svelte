@@ -2,17 +2,21 @@
 	import { getStore } from '$lib/utils/hmr-stores';
 
 	export let id: string;
+	export let agent: string;
 
 	const count = getStore(id, 0);
 
 	const handleClick = () => {
 		$count += 1;
-		window.api.send('to-main', $count);
 	};
+
+	$: if (window.electron) {
+		window.electron.send('to-main', $count);
+	}
 </script>
 
 <button {id} on:click={handleClick}>
-	Send Clicks to Electron: {$count}
+	Send Clicks to {agent}: {$count}
 </button>
 
 <style>

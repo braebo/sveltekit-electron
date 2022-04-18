@@ -5,20 +5,22 @@
 
 	let desktop: string;
 
-	if (browser) {
-		window.api.receive('from-main', (data: any) => {
+	if (window.electron && browser) {
+		window.electron.receive('from-main', (data: any) => {
 			desktop = `Received Message "${data}" from Electron`;
 			console.log(desktop);
 		});
 	}
+
+	const agent = window.electron ? 'Electron' : 'Browser';
 </script>
 
 <main>
 	<Logo />
 
-	<h1>Hello Electron!</h1>
+	<h1>Hello {agent}!</h1>
 
-	<Counter id="0" />
+	<Counter id="0" {agent} />
 
 	{#if desktop}
 		<br />
