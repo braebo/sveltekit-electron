@@ -1,6 +1,6 @@
-/* Sveltekit SSR can be disabled in the handle function */
-export async function handle({ request, resolve }) {
-	const response = await resolve(request, {
+/** @type {import('@sveltejs/kit').Handle} */
+export async function handle({ event, resolve }) {
+	const response = await resolve(event, {
 		ssr: false,
 	});
     
