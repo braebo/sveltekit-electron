@@ -1,10 +1,14 @@
 types/env.d.ts
 yarn-error.log
 pnpm-lock.yaml
+!.env.example
 node_modules/
-.svelte-kit/
+/.svelte-kit
 .DS_Store
 .svelte/
+/package
 *.local
+.env.*
 build/
 dist/
+.env

@@ -9,7 +9,8 @@ Minimal [Sveltekit](https://github.com/sveltejs/kit#readme) + [Electron](https:/
 <br />
 
 ## Getting Started
-> *Feel free to substitute `npm` with `pnpm` or `yarn`.
+
+Unfortunately you must use `npm` as there are issues that arise when using `pnpm` or `yarn`
 
 |         |                                             |
 | ------- | ------------------------------------------- |
