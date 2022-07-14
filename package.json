@@ -8,51 +8,50 @@
 	"scripts": {
 		"dev": "cross-env NODE_ENV=dev npm run dev:all",
 		"dev:all": "concurrently -n=svelte,electron -c='#ff3e00',blue \"npm run dev:svelte\" \"npm run dev:electron\"",
-		"dev:svelte": "svelte-kit dev",
+		"dev:svelte": "vite dev",
 		"dev:electron": "electron src/electron.cjs",
 		"build": "cross-env NODE_ENV=production npm run build:svelte && npm run build:electron",
-		"build:svelte": "svelte-kit build",
-		"build:electron": "electron-builder -mwl --config build.config.json",
-		"start": "svelte-kit start"
+		"build:svelte": "vite build",
+		"build:electron": "electron-builder -l --config build.config.json",
+		"prepare": "svelte-kit sync"
 	},
 	"engines": {
 		"npm": ">=7",
-		"pnpm": "use npm - https://github.com/FractalHQ/sveltekit-electron/issues/12#issuecomment-1068399385",
 		"yarn": "use npm - https://github.com/FractalHQ/sveltekit-electron/issues/12#issuecomment-1068399385"
 	},
 	"browserslist": [
 		"Chrome 89"
 	],
 	"dependencies": {
-		"electron-context-menu": "^2.5.2",
+		"electron-context-menu": "^3.3.0",
 		"electron-reloader": "^1.2.3",
 		"electron-serve": "^1.1.0",
 		"electron-window-state": "^5.0.3"
 	},
 	"devDependencies": {
-		"@sveltejs/adapter-static": "^1.0.0-next.29",
-		"@sveltejs/kit": "next",
-		"@types/electron-window-state": "^2.0.34",
-		"@typescript-eslint/eslint-plugin": "^4.33.0",
-		"@typescript-eslint/parser": "^4.33.0",
-		"concurrently": "^6.5.1",
+		"@sveltejs/adapter-static": "1.0.0-next.36",
+		"@sveltejs/kit": "1.0.0-next.372",
+		"@types/electron-window-state": "^5.0.0",
+		"@typescript-eslint/eslint-plugin": "^5.30.6",
+		"@typescript-eslint/parser": "^5.30.6",
+		"concurrently": "^7.2.2",
 		"cross-env": "^7.0.3",
-		"dotenv": "^8.6.0",
-		"electron": "^12.2.3",
-		"electron-builder": "^22.14.13",
+		"dotenv": "^16.0.1",
+		"electron": "^19.0.8",
+		"electron-builder": "^23.1.0",
 		"electron-connect": "^0.6.3",
-		"electron-packager": "^15.4.0",
-		"electron-updater": "^4.6.5",
-		"eslint": "^7.32.0",
-		"eslint-plugin-svelte": "^1.1.2",
+		"electron-packager": "^15.5.1",
+		"electron-updater": "^5.0.5",
+		"eslint": "^8.19.0",
+		"eslint-plugin-svelte": "^2.2.0",
 		"npm-run-all": "^4.1.5",
-		"prettier": "^2.6.2",
+		"prettier": "^2.7.1",
 		"prettier-plugin-svelte": "^2.7.0",
-		"sass": "^1.50.0",
-		"svelte": "^3.47.0",
-		"svelte-check": "^1.6.0",
-		"svelte-preprocess": "^4.10.6",
-		"typescript": "^4.6.3",
-		"vite": "^2.9.5"
+		"sass": "^1.53.0",
+		"svelte": "^3.49.0",
+		"svelte-check": "^2.8.0",
+		"svelte-preprocess": "^4.10.7",
+		"typescript": "^4.7.4",
+		"vite": "^2.9.14"
 	}
 }
