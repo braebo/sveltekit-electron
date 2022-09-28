@@ -10,8 +10,8 @@ try {
 	console.error(e);
 }
 
-const serveURL = serve({ directory: "." });
-const port = process.env.PORT || 3000;
+const serveURL = serve({ directory: '.' });
+const port = process.env.PORT || 5173;
 const dev = !app.isPackaged;
 let mainWindow;
 
@@ -20,7 +20,7 @@ function createWindow() {
 		defaultWidth: 800,
 		defaultHeight: 600,
 	});
-	
+
 	const mainWindow = new BrowserWindow({
 		backgroundColor: 'whitesmoke',
 		titleBarStyle: 'hidden',
@@ -37,7 +37,7 @@ function createWindow() {
 			nodeIntegration: true,
 			spellcheck: false,
 			devTools: dev,
-			preload: path.join(__dirname, "preload.cjs")
+			preload: path.join(__dirname, 'preload.cjs'),
 		},
 		x: windowState.x,
 		y: windowState.y,
@@ -81,7 +81,9 @@ function loadVite(port) {
 
 function createMainWindow() {
 	mainWindow = createWindow();
-	mainWindow.once('close', () => { mainWindow = null });
+	mainWindow.once('close', () => {
+		mainWindow = null;
+	});
 
 	if (dev) loadVite(port);
 	else serveURL(mainWindow);
@@ -98,5 +100,5 @@ app.on('window-all-closed', () => {
 });
 
 ipcMain.on('to-main', (event, count) => {
-	return mainWindow.webContents.send('from-main', `next count is ${count+1}`);
-  })
+	return mainWindow.webContents.send('from-main', `next count is ${count + 1}`);
+});
