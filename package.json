@@ -56,7 +56,7 @@
 	},
 	"overrides": {
 		"electron": {
-			"got": "12.1.0"
+			"got": "^12.5.1"
 		}
 	}
 }
