@@ -19,6 +19,7 @@ Unfortunately you must use `npm` as there are issues that arise when using `pnpm
 | Develop | · `npm run dev`                             |
 | Build   | · `npm run build`                           |
 
+In order to eliminate vulnerabilities caused by electron itself, please run `npm update` and `npm audit fix`. This will apply overrides.
 
 <br />
 
@@ -32,4 +33,4 @@ Unfortunately you must use `npm` as there are issues that arise when using `pnpm
 
 ## Change Build Targets
 
-In the scripts section of package.json you can update the `build:electron` command and change the flags to set the targets, by default it uses  `-mwl` which is Mac, Windows, and Linux
+In the scripts section of package.json you can update the `build:electron` command and change the flags to set the targets, by default it uses `-mwl` which is Mac, Windows, and Linux
