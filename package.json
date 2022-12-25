@@ -12,7 +12,7 @@
 		"dev:electron": "electron src/electron.cjs",
 		"build": "cross-env NODE_ENV=production npm run build:svelte && npm run build:electron",
 		"build:svelte": "vite build",
-		"build:electron": "electron-builder -w --config build.config.json --win portable",
+		"build:electron": "electron-builder --config build.config.json --win portable",
 		"symlink:app": "ln -s /mnt/c/kit-app/apps/sveltekit/src/* /mnt/c/kit-app/shells/sveltkit-electron/src"
 	},
 	"engines": {
