@@ -26,9 +26,13 @@
 		"electron-context-menu": "^3.3.0",
 		"electron-reloader": "^1.2.3",
 		"electron-serve": "^1.1.0",
-		"electron-window-state": "^5.0.3"
+		"electron-window-state": "^5.0.3",
+		"vite-plugin-glsl": "^1.0.2"
 	},
 	"devDependencies": {
+		"@smui/button": "^7.0.0-beta.0",
+		"@smui/card": "^7.0.0-beta.0",
+		"@smui/layout-grid": "^7.0.0-beta.0",
 		"@sveltejs/adapter-static": "1.0.0-next.43",
 		"@sveltejs/kit": "1.0.0-next.504",
 		"@typescript-eslint/eslint-plugin": "^5.30.6",
