@@ -1,6 +1,6 @@
 const windowStateManager = require('electron-window-state');
-const contextMenu = require('electron-context-menu');
 const { app, BrowserWindow, ipcMain } = require('electron');
+const contextMenu = require('electron-context-menu');
 const serve = require('electron-serve');
 const path = require('path');
 
