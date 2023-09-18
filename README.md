@@ -14,12 +14,12 @@ Unfortunately you must use `npm` as there are issues that arise when using `pnpm
 
 |         |                                             |
 | ------- | ------------------------------------------- |
-| Clone   | · `npx degit fractalhq/sveltekit-electron ` |
-| Install | · `npm install`                             |
-| Develop | · `npm run dev`                             |
-| Build   | · `npm run build`                           |
+| Clone   | · `pnpm exec degit fractalhq/sveltekit-electron ` |
+| Install | · `pnpm install`                             |
+| Develop | · `pnpm dev`                             |
+| Build   | · `pnpm build`                           |
 
-In order to eliminate vulnerabilities caused by electron itself, please run `npm update` and `npm audit fix`. This will apply overrides.
+In order to eliminate vulnerabilities caused by electron itself, please run `pnpm update` and `pnpm audit fix`. This will apply overrides.
 
 <br />
 

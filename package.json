@@ -1,23 +1,22 @@
 {
-	"name": "sveltekit-electron",
+	"name": "sveltekit-electron-typescript",
 	"version": "0.0.1",
 	"private": true,
-	"description": "Minimal Sveltekit + Electron starter template.",
+	"description": "Minimal Sveltekit + Electron + Typescript starter template.",
 	"main": "src/electron.cjs",
 	"type": "module",
-	"author": "Braden Wiggins",
+	"author": "Morgan Dilling",
 	"scripts": {
-		"dev": "cross-env NODE_ENV=dev npm run dev:all",
-		"dev:all": "concurrently -n=svelte,electron -c='#ff3e00',blue \"npm run dev:svelte\" \"npm run dev:electron\"",
+		"dev": "cross-env NODE_ENV=dev pnpm dev:all",
+		"dev:all": "concurrently -n=svelte,electron -c='#ff3e00',blue \"pnpm dev:svelte\" \"pnpm dev:electron\"",
 		"dev:svelte": "vite dev",
 		"dev:electron": "electron src/electron.cjs",
-		"build": "cross-env NODE_ENV=production npm run build:svelte && npm run build:electron",
+		"build": "cross-env NODE_ENV=production pnpm build:svelte && pnpm build:electron",
 		"build:svelte": "vite build",
 		"build:electron": "electron-builder -mwl --config build.config.json"
 	},
 	"engines": {
-		"npm": ">=7",
-		"yarn": "use npm - https://github.com/FractalHQ/sveltekit-electron/issues/12#issuecomment-1068399385"
+		"pnpm": ">=8"
 	},
 	"browserslist": [
 		"Chrome 89"
