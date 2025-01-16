@@ -4,7 +4,8 @@
 		"paths": {
 			"$lib": ["src/lib"],
 			"$lib/*": ["src/lib/*"],
-			"/~/*": ["src/*"]
+			"/~/*": ["src/*"],
+			"$static": ["src/static"]
 		}
 	},
 	"exclude": ["node_modules", "build", "dist"]

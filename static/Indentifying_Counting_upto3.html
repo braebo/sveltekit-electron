@@ -1,0 +1,344 @@
+<!DOCTYPE html> 
+<html> 
+    <head><link href="https://fonts.googleapis.com/css?family=Varela+Round|Poppins&display=swap" rel="stylesheet"></head>
+<body> 
+    <div class="warning">Please turn your device to landscape mode to continue!</div>
+<div class="wrap">
+        <div class="game"></div>
+        <div class="modal-overlay">
+            <div class="modal">
+                <h2 class="winner">You Rock!</h2>
+            </div>
+        </div>
+    </div>
+<div>
+<script>
+        (function(){
+            var Memory = {
+                init: function(cards){
+                    this.fullCardsArray = cards;
+                    this.$game = document.querySelector(".game");
+                    this.$modal = document.querySelector(".modal");
+                    this.$overlay = document.querySelector(".modal-overlay");
+                    this.selectRandomPairs();
+                    this.shuffleCards(this.cardsArray);
+                    this.setup();
+                },
+
+                selectRandomPairs: function(){
+    let shuffledCards = this.shuffle(this.fullCardsArray);
+    // Select 6 pairs (6 terms + 6 definitions = 12 cards)
+    this.cardsArray = shuffledCards.slice(0, 6).map(card => ({ term: card.term, definition: card.definition, id: card.id }));
+},
+
+                shuffleCards: function(cardsArray){
+                    let pairs = [];
+                    cardsArray.forEach(card => {
+                        pairs.push({ type: 'term', content: card.term, id: card.id });
+                        pairs.push({ type: 'definition', content: card.definition, id: card.id });
+                    });
+                    this.$cards = this.shuffle(pairs);
+                },
+
+                setup: function(){
+                    this.html = this.buildHTML();
+                    this.$game.innerHTML = this.html;
+                    this.$memoryCards = document.querySelectorAll(".card");
+                    this.paused = false;
+                    this.guess = null;
+                    this.binding();
+                },
+
+                binding: function(){
+                    this.$memoryCards.forEach(card => card.addEventListener("click", this.cardClicked.bind(this)));
+                },
+
+                cardClicked: function(event){
+                    var _ = this;
+                    var $card = event.currentTarget;
+                    if(!_.paused && !$card.querySelector(".inside").classList.contains("matched") && !$card.querySelector(".inside").classList.contains("picked")){
+                        $card.querySelector(".inside").classList.add("picked");
+                        if(!_.guess){
+                            _.guess = { id: $card.getAttribute("data-id"), type: $card.getAttribute("data-type") };
+                        } else {
+                            if(_.guess.id === $card.getAttribute("data-id") && _.guess.type !== $card.getAttribute("data-type")){
+                                document.querySelectorAll(".picked").forEach(picked => picked.classList.add("matched"));
+                                _.guess = null;
+                            } else {
+                                _.guess = null;
+                                _.paused = true;
+                                setTimeout(function(){
+                                    document.querySelectorAll(".picked").forEach(picked => picked.classList.remove("picked"));
+                                    _.paused = false;
+                                }, 600);
+                            }
+                        }
+                        if(document.querySelectorAll(".matched").length === document.querySelectorAll(".card").length){
+                            _.win();
+                        }
+                    }
+                },
+
+                win: function(){
+                    this.paused = true;
+                    setTimeout(function(){
+                        Memory.showModal();
+                        Memory.$game.style.display = 'none';
+                    }, 1000);
+                },
+
+                showModal: function(){
+                    this.$overlay.style.display = 'block';
+                    this.$modal.style.display = 'block';
+                },
+
+                hideModal: function(){
+                    this.$overlay.style.display = 'none';
+                    this.$modal.style.display = 'none';
+                },
+
+                reset: function(){
+                    this.hideModal();
+                    this.selectRandomPairs();
+                    this.shuffleCards(this.cardsArray);
+                    this.setup();
+                    this.$game.style.display = 'block';
+                },
+
+                shuffle: function(array){
+                    var counter = array.length, temp, index;
+                    while (counter > 0) {
+                        index = Math.floor(Math.random() * counter);
+                        counter--;
+                        temp = array[counter];
+                        array[counter] = array[index];
+                        array[index] = temp;
+                    }
+                    return array;
+                },
+
+                buildHTML: function(){
+                    var frag = '';
+                    this.$cards.forEach(function(v){
+                        frag += '<div class="card" data-id="'+ v.id +'" data-type="'+ v.type +'"><div class="inside">\
+                        <div class="front">'+ v.content +'</div>\
+                        <div class="back"><img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/74196/codepen-logo.png" alt="Codepen" /></div></div>\
+                        </div>';
+                    });
+                    return frag;
+                }
+            };
+
+            var cards = [
+                { term: "1 pizza", definition: "&#127829;", id: 1 },
+                { term: "2 pizzas", definition: "&#127829;&#127829;", id: 2 },
+                { term: "3 pizzas", definition: "&#127829;&#127829;&#127829;", id: 3 },
+                { term: "4 pizzas", definition: "&#127829;&#127829;&#127829;&#127829;", id: 4 },
+                { term: "5 pizzas", definition: "&#127829;&#127829;&#127829;&#127829;&#127829;", id: 5 },
+                { term: "1 tomato", definition: "&#127813;", id: 6 },
+                { term: "2 tomatoes", definition: "&#127813;&#127813;", id: 7 },
+                { term: "3 tomatoes", definition: "&#127813;&#127813;&#127813;", id: 8 },
+                { term: "5 cookies", definition: "&#127850;&#127850;&#127850;&#127850;&#127850;", id: 9 },
+                { term: "1 taco", definition: "&#127790;", id: 10 },
+                { term: "2 tacos", definition: "&#127790;&#127790;", id: 11 },
+                { term: "3 tacos", definition: "&#127790;&#127790;&#127790;", id: 12 },
+                { term: "4 tacos", definition: "&#127790;&#127790;&#127790;&#127790;", id: 13 },
+                { term: "5 tacos", definition: "&#127790;&#127790;&#127790;&#127790;&#127790;", id: 14 },
+            ];
+
+            Memory.init(cards);
+        })();
+    </script>
+    <style>
+    @media only screen and (orientation: landscape) {
+
+    * {
+        box-sizing: border-box;
+    }
+
+    html,
+    body {
+        margin: 0; height: 100%; overflow: hidden;
+    }
+
+    body {
+        background: black;
+        min-height: 100%;
+        font-family: "Arial", sans-serif;
+    }
+
+    .wrap {
+        position: relative;
+        height: 100%;
+        min-height: 500px;
+        padding-bottom: 20px;
+    }
+
+    .game {
+        transform-style: preserve-3d;
+        perspective: 500px;
+        min-height: 100%;
+        height: 100%;
+    }
+
+    @keyframes matchAnim {
+        0% {
+            background: #bcffcc;
+        }
+
+        100% {
+            background: white;
+        }
+    }
+
+    .card {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        float: left;
+        width: 16.66666%;
+        height: 30%;
+        text-align: center;
+        perspective: 500px;
+        position: relative;
+        font-size: 24px;
+        cursor: pointer;
+        line-height: 120%;
+        z-index: 50;
+        background: transparent;
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        border: 5px solid black;
+        
+
+    }
+
+    @media (max-width: 800px) {
+        .card {
+            width: 25%;
+            height: 16.666%;
+        }
+    }
+
+    .card .inside {
+        width: 100%;
+        height: 100%;
+        display: block;
+        transform-style: preserve-3d;
+        transition: .4s ease-in-out;
+
+    }
+
+    .card .inside.picked,
+    .card .inside.matched {
+        transform: rotateY(180deg);
+    }
+
+    .card .inside.matched {
+        animation: 1s matchAnim ease-in-out;
+        animation-delay: .4s;
+    }
+
+    .card .front,
+    .card .back {
+        backface-visibility: hidden;
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        padding: 20px;
+        background: white;
+    }
+
+    .card .front img,
+    .card .back img {
+        max-width: 100%;
+        display: block;
+        margin: 0 auto;
+        max-height: 100%;
+    }
+
+    .card .front {
+        transform: rotateY(-180deg);
+    }
+
+    @media (max-width: 800px) {
+        .card .front {
+            padding: 5px;
+        }
+    }
+
+    .card .back {
+        transform: rotateX(0);
+    }
+
+    @media (max-width: 800px) {
+        .card .back {
+            padding: 10px;
+        }
+    }
+
+    .modal-overlay {
+        display: none;
+        background: rgba(0, 0, 0, .8);
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .modal {
+        display: none;
+        position: relative;
+        width: 500px;
+        height: 400px;
+        max-height: 90%;
+        max-width: 90%;
+        min-height: 380px;
+        margin: 0 auto;
+        background: white;
+        top: 50%;
+        transform: translateY(-50%);
+        padding: 30px 10px;
+    }
+
+    .modal .winner {
+        font-size: 80px;
+        text-align: center;
+        font-family: "Anton", sans-serif;
+        color: #4d4d4d;
+        text-shadow: 0px 3px 0 black;
+    }
+
+    @media (max-width: 480px) {
+        .modal .winner {
+            font-size: 60px;
+        }
+    }
+
+    .warning {
+        visibility: hidden;
+    }
+}
+
+@media only screen and (orientation: portrait) {
+    .game, .modal-overlay {
+        visibility: hidden;
+    }
+    .warning {
+        visibility: visible;
+        font-size: 100px;
+        text-align: center;
+        margin-top: 80%;
+        font-family: 'Poppins';
+        color: orange;
+        background-color: black;
+    }
+
+    body {
+        background-color: black;
+    }
+}</style>
+</body> 
+</html>

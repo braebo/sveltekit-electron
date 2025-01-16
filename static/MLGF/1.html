@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Clicker Game</title>
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round|Poppins&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: black;
+            font-family: 'Varela Round';
+            color: orange;
+            margin: 0;
+            padding: 0;
+        }
+
+        img {
+            width: 800px;
+        }
+
+        #instructions {
+            font-size: 20px;
+            margin: 20px;
+        }
+
+        #counter {
+            font-size: 18px;
+            margin: 10px 20px;
+        }
+
+        .circle {
+            position: absolute;
+            border: 3px solid red;
+            border-radius: 50%;
+            pointer-events: none; /* Prevent interaction with the circle */
+            transform: translate(-50%, -50%);
+        }
+
+        #game-container {
+            position: relative;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Instructions and Counter -->
+    <div id="instructions">Click on 3 cookies!</div>
+    <div id="counter">Cookies clicked: 0</div>
+
+    <!-- Image Container -->
+    <div id="game-container">
+        <img id="game-image" src="PlayCook.png" alt="Sample Image with Cookies" usemap="#cookie-map">
+    </div>
+
+    <!-- Map -->
+    <map name="cookie-map">
+        <!-- Define clickable regions with fixed coordinates -->
+        <area shape="circle"  coords="517,618,24" href="javascript:void(0);" alt="Cookie 1" onclick="clickCookie(1, 517, 618);">
+        <area shape="circle"  coords="134,863,23" href="javascript:void(0);" alt="Cookie 2" onclick="clickCookie(2, 134, 863);">
+        <area shape="circle" coords="442,908,24" href="javascript:void(0);" alt="Cookie 3" onclick="clickCookie(3, 442, 908);">
+        <area shape="circle" coords="1435,663,24" href="javascript:void(0);" alt="Cookie 3" onclick="clickCookie(3, 1435, 663);">
+        <area shape="circle" coords="1305,816,23" href="javascript:void(0);" alt="Cookie 3" onclick="clickCookie(3, 1305, 816);">
+    </map>
+
+    <script>
+        let counter = 0;
+        const clickedCookies = new Set(); // Track clicked cookies
+        const instructions = document.getElementById('instructions');
+        const counterDisplay = document.getElementById('counter');
+        const gameContainer = document.getElementById('game-container');
+        const gameImage = document.getElementById('game-image');
+
+        // Function to handle the cookie click
+        function clickCookie(cookieId, originalX, originalY) {
+            if (clickedCookies.has(cookieId)) {
+                alert("You've already clicked this cookie!");
+                return;
+            }
+            clickedCookies.add(cookieId);
+            counter++;
+
+            // Create and position the circle around the clicked cookie using original coordinates
+            const circle = document.createElement('div');
+            circle.classList.add('circle');
+            circle.style.width = '60px'; // Adjust size for the circle
+            circle.style.height = '60px';
+            circle.style.left = `${originalX}px`;
+            circle.style.top = `${originalY}px`;
+            gameContainer.appendChild(circle);
+
+            // Update instructions and counter
+            if (counter === 3) {
+                instructions.textContent = "Great! Now click one more cookie!";
+            } else if (counter === 4) {
+                instructions.textContent = "Good job!";
+            }
+            counterDisplay.textContent = `Cookies clicked: ${counter}`;
+        }
+    </script>
+</body>
+</html>
