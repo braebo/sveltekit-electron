@@ -18,12 +18,13 @@
             width: 800px;
         }
 
-        #instructions {
+        #box {
             font-size: 20px;
             margin: 20px;
+            margin-top: 300px;
         }
 
-        #counter {
+        #counter, #timer {
             font-size: 18px;
             margin: 10px 20px;
         }
@@ -32,43 +33,74 @@
             position: absolute;
             border: 3px solid red;
             border-radius: 50%;
-            pointer-events: none; /* Prevent interaction with the circle */
+            pointer-events: none;
             transform: translate(-50%, -50%);
         }
 
         #game-container {
             position: relative;
             width: 100%;
+            display: flex;
+            flex-wrap: nowrap;
         }
     </style>
 </head>
 <body>
-    <!-- Instructions and Counter -->
-    <div id="instructions">Click on 3 cookies!</div>
-    <div id="counter">Cookies clicked: 0</div>
-
     <!-- Image Container -->
     <div id="game-container">
         <img id="game-image" src="PlayCook.png" alt="Sample Image with Cookies" usemap="#cookie-map">
+        <div id="box">
+            <div id="instructions">Click on 5 cookies!</div>
+            <div id="counter">Cookies clicked: 0</div>
+            <div id="timer">Time elapsed: 0 seconds</div>
+        </div>
     </div>
 
     <!-- Map -->
     <map name="cookie-map">
-        <!-- Define clickable regions with fixed coordinates -->
-        <area shape="circle"  coords="517,618,24" href="javascript:void(0);" alt="Cookie 1" onclick="clickCookie(1, 517, 618);">
-        <area shape="circle"  coords="134,863,23" href="javascript:void(0);" alt="Cookie 2" onclick="clickCookie(2, 134, 863);">
-        <area shape="circle" coords="442,908,24" href="javascript:void(0);" alt="Cookie 3" onclick="clickCookie(3, 442, 908);">
-        <area shape="circle" coords="1435,663,24" href="javascript:void(0);" alt="Cookie 3" onclick="clickCookie(3, 1435, 663);">
-        <area shape="circle" coords="1305,816,23" href="javascript:void(0);" alt="Cookie 3" onclick="clickCookie(3, 1305, 816);">
+        <area shape="circle" coords="744,343,13" href="javascript:void(0);" alt="Cookie 1" onclick="clickCookie(1, 744,343);">
+        <area shape="circle" coords="269,320,13" href="javascript:void(0);" alt="Cookie 2" onclick="clickCookie(2, 269,320);">
+        <area shape="circle" coords="69,446,12" href="javascript:void(0);" alt="Cookie 3" onclick="clickCookie(3, 69,446);">
+        <area shape="circle" coords="229,470,12" href="javascript:void(0);" alt="Cookie 4" onclick="clickCookie(4, 229,470);">
+        <area shape="circle" coords="676,423,12" href="javascript:void(0);" alt="Cookie 5" onclick="clickCookie(5, 676,423);">
     </map>
+    <div id="scroller"></div>
 
     <script>
+        window.onload = function() {
+            const scrollerElement = document.getElementById('scroller');
+            if (scrollerElement) {
+                scrollerElement.scrollIntoView({ behavior: 'smooth' });
+            }
+        };
+
         let counter = 0;
         const clickedCookies = new Set(); // Track clicked cookies
         const instructions = document.getElementById('instructions');
         const counterDisplay = document.getElementById('counter');
+        const timerDisplay = document.getElementById('timer');
         const gameContainer = document.getElementById('game-container');
-        const gameImage = document.getElementById('game-image');
+        let timerInterval; // To store the interval ID
+        let startTime; // To store the starting time
+
+        // Start the timer
+        function startTimer() {
+            startTime = Date.now();
+            timerInterval = setInterval(() => {
+                const elapsedTime = Math.floor((Date.now() - startTime) / 1000);
+                timerDisplay.textContent = `Time elapsed: ${elapsedTime} seconds`;
+            }, 1000);
+        }
+
+        // Stop the timer
+        function stopTimer() {
+            clearInterval(timerInterval);
+            const totalTime = Math.floor((Date.now() - startTime) / 1000);
+            timerDisplay.textContent = `Final time: ${totalTime} seconds`;
+        }
+
+        // Start the timer on page load
+        startTimer();
 
         // Function to handle the cookie click
         function clickCookie(cookieId, originalX, originalY) {
@@ -79,7 +111,7 @@
             clickedCookies.add(cookieId);
             counter++;
 
-            // Create and position the circle around the clicked cookie using original coordinates
+            // Create and position the circle around the clicked cookie
             const circle = document.createElement('div');
             circle.classList.add('circle');
             circle.style.width = '60px'; // Adjust size for the circle
@@ -92,8 +124,12 @@
             if (counter === 3) {
                 instructions.textContent = "Great! Now click one more cookie!";
             } else if (counter === 4) {
-                instructions.textContent = "Good job!";
+                instructions.textContent = "Good job! Click the last cookie!";
+            } else if (counter === 5) {
+                instructions.textContent = "Good job! You clicked all 5 cookies!";
+                stopTimer(); // Stop the timer when all cookies are clicked
             }
+            
             counterDisplay.textContent = `Cookies clicked: ${counter}`;
         }
     </script>

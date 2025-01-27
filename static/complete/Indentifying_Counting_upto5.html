@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round|Poppins&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <style>
+        body {
+            margin: 0; 
+            font-family: 'Arial', sans-serif;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #fff;
+        }
+
+        .result-overlay {
+            background: rgba(0, 0, 0, 0.8);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .result {
+            position: relative;
+            width: 500px;
+            height: auto;
+            max-width: 90%;
+            background: white;
+            padding: 30px 20px;
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.5);
+        }
+
+        .result bdo {
+            font-size: 40px;
+            text-align: center;
+            font-family: "Anton", sans-serif;
+            color: #4d4d4d;
+            margin-bottom: 20px;
+            text-shadow: 0px 3px 0 black;
+        }
+
+        .result p {
+            font-family: 'Varela Round', sans-serif;
+            text-align: center;
+            font-size: 18px;
+            color: #333;
+            margin: 10px 0;
+        }
+
+        .result span {
+            font-weight: bold;
+            color: #000;
+        }
+
+        @media (max-width: 480px) {
+            .result bdo {
+                font-size: 30px;
+            }
+
+            .result p {
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="result-overlay">
+        <div class="result">
+            <bdo style="display: block; margin-left: auto; margin-right: auto;" class="message">You Rock!</bdo>
+            <p>Identifying/Counting (up to 5)</p>
+            <p>Name: <span id="yourName">Not set</span></p>
+            <p>Time: <span id="final-time">0</span> seconds</p>
+            <p>Best Time: <span id="best-time">None</span> seconds</p>
+            <p>Timestamp: <span id="last-completed">N/A</span></p>
+            <button onclick="location.replace('/KG/');" style="font-family: 'Varela Round';" class="btn btn-primary">Back</button>
+        </div>
+    </div>
+    <script>
+        // Set text content for elements from localStorage or provide default values
+        document.getElementById("yourName").textContent = localStorage.getItem("name") || "Not set";
+        document.getElementById("final-time").textContent = localStorage.getItem("Indentifying_Counting_upto5_finalTime") || "0";
+        document.getElementById("best-time").textContent = localStorage.getItem("Indentifying_Counting_upto5_bestTime") || "None";
+        document.getElementById("last-completed").textContent = localStorage.getItem("Indentifying_Counting_upto5_lastCompleted") || "N/A";
+    
+        // Reload the page every 5 seconds
+        setInterval(() => {
+            location.reload();
+        }, 5000);
+    
+        // Check if the device is in portrait mode and alert the user
+        if (window.matchMedia("(orientation: portrait)").matches) {
+            alert("Please rotate your device to landscape mode for a better viewing experience.");
+        }
+    </script>
+    
+</body>
+</html>

@@ -13,45 +13,71 @@
 		href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
 	/>
 </svelte:head>
-<ol>
+<ol id="start">
 	<h1>
-		Indentifying/Counting
-		<br />
-		 Numbers (up to 5)
+	  One More, One Less, Fewer, and More!
 	</h1>
 	<br />
+  <div class="container math">
+	<!-- One More -->
 	<p>This is one pizza.</p>
 	<img alt="pizza" height="45" src={pizza} />
-	<p>This is two frogs.</p>
+	<p>Now, one more pizza.</p>
+	<img alt="pizza" height="45" src={pizza} /><img alt="pizza" height="45" src={pizza} />
+	<p>How many pizzas are there now?</p>
+	<p>Answer: 2 pizzas</p>
+  </div>
+  <div class="container science">
+	<!-- One Less -->
+	<p>This is three frogs.</p>
 	<img alt="frog" height="45" src={frog} />
 	<img alt="frog" height="45" src={frog} />
-	<p>This is three pizzas.</p>
-	<img alt="pizza" height="45" src={pizza} />
-	<img alt="pizza" height="45" src={pizza} />
-	<img alt="pizza" height="45" src={pizza} />
-	<p>This is four frogs.</p>
+	<img alt="frog" height="45" src={frog} />
+	<p>If we take one less frog, we have:</p>
 	<img alt="frog" height="45" src={frog} />
 	<img alt="frog" height="45" src={frog} />
-	<img alt="frog" height="45" src={frog} />
-	<img alt="frog" height="45" src={frog} />
+	<p>How many frogs are left? - 2 frogs</p>
+</div>
+<div class="container ss">
+	<!-- Fewer -->
 	<p>This is five pizzas.</p>
 	<img alt="pizza" height="45" src={pizza} />
 	<img alt="pizza" height="45" src={pizza} />
 	<img alt="pizza" height="45" src={pizza} />
 	<img alt="pizza" height="45" src={pizza} />
 	<img alt="pizza" height="45" src={pizza} />
-	<br />
-	<br />
+	<p>If we have fewer pizzas, we take pizzas away.</p>
+	<img alt="pizza" height="45" src={pizza} />
+	<img alt="pizza" height="45" src={pizza} />
+	<p>How many pizzas do we have now? - 2 pizzas</p>
+	<p>Three pizzas were taken away.</p>
+</div>
+<div class="container english">
+	<!-- Greater -->
+	<p>This is two frogs.</p>
+	<img alt="frog" height="45" src={frog} />
+	<img alt="frog" height="45" src={frog} />
+	<p>If we have greater frogs, there are more frogs.</p>
+	<img alt="frog" height="45" src={frog} />
+	<img alt="frog" height="45" src={frog} />
+	<img alt="frog" height="45" src={frog} />
+	<img alt="frog" height="45" src={frog} />
+	<img alt="frog" height="45" src={frog} />
+	<p>How many frogs do we have now?</p>
+	<p>Answer: 5 frogs</p>
+</div>
 	<button
-		on:click={() => location.replace('../Indentifying_Counting_upto3.html')}
-		class="btn btn-success"
+	  on:click={() => location.replace('x.com')}
+	  class="btn btn-success"
 	>
-		Continue&nbsp;&nbsp;
-		<i class="fas fa-arrow-right" />
-	</button>
-	<!--MAKE LINK & STYLE-->
-	<!--MAKE LINK & STYLE-->
+	  Continue&nbsp;&nbsp;
+	  <i class="fas fa-arrow-right" />
+	</button>  
 	<style>
+
+		ol {
+			padding: 0px;
+		}
 		@import 'https://fonts.googleapis.com/css2?family=Poppins&display=swap';
 
 		* {
@@ -69,6 +95,8 @@
 			line-height: 2;
 			height: 100%;
 			background-color: #221;
+			overflow-y: visible;
+			margin-top: 90px;
 		}
 
 		a {
@@ -106,13 +134,47 @@
 
 		h1 {
 			color: white;
-			margin-right: 30px;
 			text-align: center;
 		}
 
-		p,
-		blockquote {
-			color: white;
+
+		/* Container styles */
+		.container {
+			border-radius: 5px;
+			margin-bottom: 20px;
+			box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+			padding: 10px 20px;
+		}
+
+		.science {
+			background-color: #90ee90;
+			box-shadow: 0 0 50px #90ee90;
+			border-radius: 20px;
+			overflow: hidden;
+		}
+
+		.ss {
+			background-color: #fbdf71;
+			box-shadow: 0 0 50px #fbdf71;
+			border-radius: 20px;
+			overflow: hidden;
+		}
+
+		.english {
+			background-color: #ffb6c1;
+			box-shadow: 0 0 50px #ffb6c1;
+			border-radius: 20px;
+			overflow: hidden;
+		}
+
+		.math {
+			background-color: #add8e6;
+			box-shadow: 0 0 50px #add8e6;
+			border-radius: 20px;
+			overflow: hidden;
+		}
+		p {
+			margin-bottom: 0px;
 		}
 	</style>
 </ol>

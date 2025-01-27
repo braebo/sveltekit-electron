@@ -22,19 +22,19 @@
 	<br />
 	<p>This is one pizza.</p>
 	<img alt="pizza" height="45" src={pizza} />
-	<p>This is two frogs.</p>
+	<p>These are two frogs.</p>
 	<img alt="frog" height="45" src={frog} />
 	<img alt="frog" height="45" src={frog} />
-	<p>This is three pizzas.</p>
+	<p>These are three pizzas.</p>
 	<img alt="pizza" height="45" src={pizza} />
 	<img alt="pizza" height="45" src={pizza} />
 	<img alt="pizza" height="45" src={pizza} />
-	<p>This is four frogs.</p>
+	<p>These are four frogs.</p>
 	<img alt="frog" height="45" src={frog} />
 	<img alt="frog" height="45" src={frog} />
 	<img alt="frog" height="45" src={frog} />
 	<img alt="frog" height="45" src={frog} />
-	<p>This is five pizzas.</p>
+	<p>These are five pizzas.</p>
 	<img alt="pizza" height="45" src={pizza} />
 	<img alt="pizza" height="45" src={pizza} />
 	<img alt="pizza" height="45" src={pizza} />
@@ -43,7 +43,7 @@
 	<br />
 	<br />
 	<button
-		on:click={() => location.replace('../Indentifying_Counting_upto3.html')}
+		on:click={() => location.replace('../Indentifying_Counting_upto5.html')}
 		class="btn btn-success"
 	>
 		Continue&nbsp;&nbsp;

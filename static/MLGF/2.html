@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Clicker Game</title>
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round|Poppins&display=swap" rel="stylesheet">
+</head>
+<body style="margin:0;">
+    <div style="width: 1150px; height: 430px; transform: scale(0.75); transform-origin: top left; border: none;">
+        <iframe id="d" width="100%" height="100%" src="1.html" scrolling="no"></iframe>
+        <script>
+            window.onload = function() {
+    const scrollerElement = document.getElementById('d');
+    if (scrollerElement) {
+        // Scroll the page to a position above the element, effectively moving it out of view
+        window.scrollTo({
+            top: scrollerElement.offsetTop - window.innerHeight, // Scroll to a position above the element
+            behavior: 'smooth'
+        });
+    }
+};
+
+        </script>
+    </div>
+</body>
+</html>

@@ -2,7 +2,7 @@
 <ol>
   <h1>Kindergarten - Math</h1>
   <li><a href="./KG/Identifying_Counting_upto5/" class="arrow"><i class="fas fa-arrow-right"></i>Indentifying and Counting Numbers (up to 5)</a></li>
-  <li><a href="x.com" class="arrow"><i class="fas fa-arrow-right"></i>More, Less, Greater, Fewer (up to 5)</a></li>
+  <li><a href="./KG/MLGF_upto5/" class="arrow"><i class="fas fa-arrow-right"></i>More, Less, Greater, Fewer (up to 5)</a></li>
   <li><a href="x.com" class="arrow"><i class="fas fa-arrow-right"></i>Indentifying and Counting Numbers (up to 10)</a></li>
   <li><a href="x.com" class="arrow"><i class="fas fa-arrow-right"></i>More, Less, Greater, Fewer (up to 10)</a></li>
   <li><a href="x.com" class="arrow"><i class="fas fa-arrow-right"></i>Addition (up to 5)</a></li>
